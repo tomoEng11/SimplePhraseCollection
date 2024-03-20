@@ -8,19 +8,15 @@
 import UIKit
 import RealmSwift
 
-class CardDetailVC: UIViewController {
+final class CardDetailVC: UIViewController {
 
-    private let tagLabel = CustomTagLabel(backgroundColor: .systemOrange, fontSize: 12)
+    private let tagLabel = CustomLabelTextView(fontSize: 12, backgroundColor: .systemOrange)
     let sentenceTextView = UITextView()
     let memoTextView = UITextView()
     private let stackView = UIStackView()
     private let cardView = UIView()
-    private let doneButton = UIButton()
-    var isModifying: Bool = false
     let realm = try! Realm()
     var previousItem: DataModel?
-    let toolBar = UIToolbar()
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +26,7 @@ class CardDetailVC: UIViewController {
         configureStackView()
         configureCardView()
         configureViewController()
+        addToolBarToKeyboard()
     }
 
     private func configureCardView() {
@@ -69,7 +66,8 @@ class CardDetailVC: UIViewController {
 
     private func configureTagLabel() {
         cardView.addSubview(tagLabel)
-        tagLabel.text = "Followers21-21"
+        tagLabel.text = "Phrase"
+        tagLabel.isEditable = false
 
         NSLayoutConstraint.activate([
             tagLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
@@ -83,30 +81,30 @@ class CardDetailVC: UIViewController {
         stackView.addArrangedSubview(sentenceTextView)
         sentenceTextView.isEditable = false
         sentenceTextView.font = UIFont.systemFont(ofSize: 20)
-        sentenceTextView.textColor = .white
         sentenceTextView.layer.cornerRadius = 10
         sentenceTextView.textAlignment = .left
         sentenceTextView.translatesAutoresizingMaskIntoConstraints = false
         sentenceTextView.backgroundColor = .secondarySystemBackground
+        sentenceTextView.delegate = self
 
         NSLayoutConstraint.activate([
             sentenceTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             sentenceTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            sentenceTextView.heightAnchor.constraint(equalToConstant: 260)
+            sentenceTextView.heightAnchor.constraint(equalToConstant: 210)
         ])
     }
 
-    func configureMemoTextView() {
+    private func configureMemoTextView() {
         stackView.addArrangedSubview(memoTextView)
         print("Before memoTextView.isEditable: \(memoTextView.isEditable)")
         memoTextView.isEditable = false
         print("After memoTextView.isEditable: \(memoTextView.isEditable)")
         memoTextView.font = UIFont.systemFont(ofSize: 20)
-        memoTextView.textColor = .white
         memoTextView.layer.cornerRadius = 10
         memoTextView.textAlignment = .left
         memoTextView.translatesAutoresizingMaskIntoConstraints = false
         memoTextView.backgroundColor = .secondarySystemBackground
+        memoTextView.delegate = self
 
         NSLayoutConstraint.activate([
             memoTextView.topAnchor.constraint(equalTo: sentenceTextView.bottomAnchor, constant: 24),
@@ -116,79 +114,73 @@ class CardDetailVC: UIViewController {
         ])
     }
 
-    func configureViewController() {
+    private func configureViewController() {
         view.backgroundColor = .systemBackground
-        let addButton = UIBarButtonItem(title: "Edit", style: .plain, target: self , action: #selector(addButtonPressed))
-        navigationItem.rightBarButtonItem = addButton
+        let naviEditButton = UIBarButtonItem(title: "Edit", style: .plain, target: self , action: #selector(naviEditButtonPressed))
+        navigationItem.rightBarButtonItem = naviEditButton
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(with:)))
+        view.addGestureRecognizer(tapGesture)
+
+        let tapGestureForNavi = UITapGestureRecognizer(target: self, action: #selector(navBarTapped))
+                navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
     }
 
-    @objc private func addButtonPressed() {
+    @objc private func dismissKeyboard(with gesture: UITapGestureRecognizer) {
+        print("Other Areas Tapped!")
+        sentenceTextView.resignFirstResponder()
+        memoTextView.resignFirstResponder()
+        tagLabel.resignFirstResponder()
+    }
+
+    @objc private func naviEditButtonPressed() {
         memoTextView.isEditable.toggle()
         sentenceTextView.isEditable.toggle()
-        isModifying.toggle()
+        tagLabel.isEditable.toggle()
 
-        if memoTextView.isEditable && isModifying {
-            configureToolBar()
-            toolBar.isHidden = false
+        if sentenceTextView.isEditable {
+            sentenceTextView.becomeFirstResponder()
 
             if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", sentenceTextView.text!).first {
                 previousItem = currentItem
             }
             print("編集中")
-            let addButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self , action: #selector(addButtonPressed))
-            navigationItem.rightBarButtonItem = addButton
+            let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self , action: #selector(naviEditButtonPressed))
+            navigationItem.rightBarButtonItem = cancelButton
         } else {
             print("閲覧のみ")
-            let addButton = UIBarButtonItem(title: "Edit", style: .plain, target: self , action: #selector(addButtonPressed))
-            navigationItem.rightBarButtonItem = addButton
+            let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self , action: #selector(naviEditButtonPressed))
+            navigationItem.rightBarButtonItem = editButton
         }
     }
 
-    private func configureToolBar() {
-        view.addSubview(toolBar)
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
+    private func addToolBarToKeyboard() {
+
+        let toolBar = UIToolbar()
         toolBar.sizeToFit()
         toolBar.backgroundColor = .systemBackground
-        toolBar.isHidden = true
 
-        NSLayoutConstraint.activate([
-            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            toolBar.widthAnchor.constraint(equalTo: view.widthAnchor),
-            toolBar.heightAnchor.constraint(equalToConstant: 55)
-        ])
-
-        // スペーサー構築
         let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
-        // 削除ボタン構築
-
         let deleteButton = UIBarButtonItem(title: "delete", style: .plain, target: self, action: #selector(deleteButtonTapped))
-
         let saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonTapped))
 
         toolBar.items = [ spacer, deleteButton, spacer, saveButton, spacer]
-        let lineView = UIView()
-        lineView.backgroundColor = .secondarySystemBackground // グレーのラインを作成
-
-        // 2. ToolBarまたはTabBarにビューを追加します。
-        toolBar.addSubview(lineView)
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true // ラインの高さを設定
-        lineView.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor).isActive = true // ToolBarの左端に配置
-        lineView.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor).isActive = true // ToolBarの右端に配置
-        lineView.bottomAnchor.constraint(equalTo: toolBar.bottomAnchor).isActive = true // ToolBarの上端に配置
+        sentenceTextView.inputAccessoryView = toolBar
+        memoTextView.inputAccessoryView = toolBar
+        tagLabel.inputAccessoryView = toolBar
     }
 
     @objc private func saveButtonTapped() {
         print("save tapped")
-        toolBar.isHidden = true
         memoTextView.isEditable.toggle()
         sentenceTextView.isEditable.toggle()
+        tagLabel.isEditable.toggle()
 
         if let newItem = realm.objects(DataModel.self).filter("sentence == %@", previousItem?.sentence).first {
             do {
                 try realm.write {
                     newItem.sentence = sentenceTextView.text
                     newItem.memo = memoTextView.text
+                    newItem.tag = tagLabel.text
                     realm.add(newItem)
                 }
             } catch {
@@ -214,6 +206,16 @@ class CardDetailVC: UIViewController {
             self.navigationController?.popViewController(animated: true)
         }
     }
+
+    @objc private func navBarTapped() {
+        sentenceTextView.resignFirstResponder()
+        memoTextView.resignFirstResponder()
+        tagLabel.resignFirstResponder()
+    }
+}
+
+extension CardDetailVC: UITextViewDelegate {
+    
 }
 
 #Preview {

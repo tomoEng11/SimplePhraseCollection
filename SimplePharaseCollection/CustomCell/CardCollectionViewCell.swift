@@ -27,6 +27,7 @@ class CardCollectionViewCell: UICollectionViewCell {
 
     func set(with item: DataModel) {
         self.sentenceLabel.text = item.sentence
+        self.tagLabel.text = item.tag
         self.backgroundColor = .systemBackground
         self.layer.masksToBounds = true
         self.layer.borderWidth = 2

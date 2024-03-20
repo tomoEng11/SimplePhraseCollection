@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AlertVC: UIViewController {
+final class AlertVC: UIViewController {
 
     let containerView = UIView()
     let titleLabel = CustomTitleLabel(textAlignment: .center, fontSize: 20)

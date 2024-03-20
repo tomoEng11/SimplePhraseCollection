@@ -8,15 +8,14 @@
 import UIKit
 import RealmSwift
 
-class CardEdittingVC: UIViewController {
+final class CardEdittingVC: UIViewController {
 
-    private let tagLabel = CustomTagLabel(backgroundColor: .systemOrange, fontSize: 12)
+    private let tagLabel = CustomLabelTextView(fontSize: 12, backgroundColor: .systemOrange)
     private let sentenceTextView = UITextView()
     private let memoTextView = UITextView()
     private let stackView = UIStackView()
     private let cardView = UIView()
-    private let doneButton = UIButton()
-    let realm = try! Realm()
+    private let realm = try! Realm()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +26,6 @@ class CardEdittingVC: UIViewController {
         configureMemoTextView()
         configureStackView()
         configureCardView()
-        configureButton()
     }
 
     private func configureCardView() {
@@ -68,7 +66,8 @@ class CardEdittingVC: UIViewController {
 
     private func configureTagLabel() {
         cardView.addSubview(tagLabel)
-        tagLabel.text = "Followers21-21"
+        tagLabel.text = "Sample Title"
+        tagLabel.isEditable = true
 
         NSLayoutConstraint.activate([
             tagLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
@@ -82,7 +81,6 @@ class CardEdittingVC: UIViewController {
         stackView.addArrangedSubview(sentenceTextView)
         sentenceTextView.delegate = self
         sentenceTextView.font = UIFont.systemFont(ofSize: 20)
-        sentenceTextView.textColor = .white
         sentenceTextView.layer.cornerRadius = 10
         sentenceTextView.textAlignment = .left
         sentenceTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -95,11 +93,10 @@ class CardEdittingVC: UIViewController {
         ])
     }
 
-    func configureMemoTextView() {
+    private func configureMemoTextView() {
         stackView.addArrangedSubview(memoTextView)
         memoTextView.delegate = self
         memoTextView.font = UIFont.systemFont(ofSize: 20)
-        memoTextView.textColor = .white
         memoTextView.layer.cornerRadius = 10
         memoTextView.textAlignment = .left
         memoTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -113,32 +110,15 @@ class CardEdittingVC: UIViewController {
         ])
     }
 
-    func configureButton() {
-        cardView.addSubview(doneButton)
-        doneButton.backgroundColor = .secondarySystemBackground
-        doneButton.layer.borderColor = UIColor.tintColor.cgColor
-        doneButton.layer.borderWidth = 2
-        doneButton.setImage(UIImage(systemName: "pencil"), for: .normal)
-        doneButton.layer.masksToBounds = true
-        doneButton.layer.cornerRadius = 24
-        doneButton.translatesAutoresizingMaskIntoConstraints = false
-        doneButton.addTarget(self, action: #selector(doneButtonPressed), for: .touchUpInside)
-
-        NSLayoutConstraint.activate([
-            doneButton.heightAnchor.constraint(equalToConstant: 50),
-            doneButton.widthAnchor.constraint(equalToConstant: 50),
-            doneButton.centerYAnchor.constraint(equalTo: tagLabel.centerYAnchor),
-            doneButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
-        ])
-    }
-
-
-    func configureViewController() {
+    private func configureViewController() {
         view.backgroundColor = .systemBackground
-        self.title = "Register"
+        self.title = "New Card"
 
         let addButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addButtonPressed))
         navigationItem.rightBarButtonItem = addButton
+
+        let tapGestureForNavi = UITapGestureRecognizer(target: self, action: #selector(navBarTapped))
+                navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
     }
 
     @objc private func addButtonPressed() {
@@ -152,6 +132,7 @@ class CardEdittingVC: UIViewController {
         let item = DataModel()
         item.sentence = sentenceTextView.text
         item.memo = memoTextView.text
+        item.tag = tagLabel.text
 
         try! realm.write {
             realm.add(item)
@@ -160,9 +141,11 @@ class CardEdittingVC: UIViewController {
 
         sentenceTextView.text = ""
         memoTextView.text = ""
+        tagLabel.text = "Phrase"
+        tagLabel.becomeFirstResponder()
     }
 
-    func configureTapGesture() {
+    private func configureTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(with:)))
         view.addGestureRecognizer(tapGesture)
     }
@@ -171,6 +154,13 @@ class CardEdittingVC: UIViewController {
         print("Other Areas Tapped!")
         sentenceTextView.resignFirstResponder()
         memoTextView.resignFirstResponder()
+        tagLabel.resignFirstResponder()
+    }
+
+    @objc private func navBarTapped() {
+        sentenceTextView.resignFirstResponder()
+        memoTextView.resignFirstResponder()
+        tagLabel.resignFirstResponder()
     }
 
     @objc private func doneButtonPressed(with gesture: UITapGestureRecognizer) {
@@ -184,6 +174,7 @@ class CardEdittingVC: UIViewController {
         let item = DataModel()
         item.sentence = sentenceTextView.text
         item.memo = memoTextView.text
+        item.tag = tagLabel.text
 
         try! realm.write {
             realm.add(item)
@@ -192,11 +183,11 @@ class CardEdittingVC: UIViewController {
 
         sentenceTextView.text = ""
         memoTextView.text = ""
+        tagLabel.text = ""
     }
 }
 
 extension CardEdittingVC: UITextViewDelegate {
-
     func textViewDidChange(_ textView: UITextView) {
     }
 }

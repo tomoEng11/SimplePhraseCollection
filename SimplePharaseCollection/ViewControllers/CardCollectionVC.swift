@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 
-class CardCollectionVC: UIViewController {
+final class CardCollectionVC: UIViewController {
 
     enum Section {
         case main
@@ -16,9 +16,9 @@ class CardCollectionVC: UIViewController {
 
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, DataModel>!
-    var isSearching: Bool = false
-    let realm = try! Realm()
-    let toolBar = UIToolbar()
+    private var isSearching: Bool = false
+    private let realm = try! Realm()
+    private let toolBar = UIToolbar()
 
     override func viewDidLoad() {
         let items = realm.objects(DataModel.self)
@@ -29,6 +29,7 @@ class CardCollectionVC: UIViewController {
         configureSearchController()
         configureViewController()
         configureToolBar()
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -61,20 +62,6 @@ class CardCollectionVC: UIViewController {
         collectionView.allowsMultipleSelection = false
     }
 
-    private func createTwoColumnFlowLayout() -> UICollectionViewFlowLayout {
-        let width = view.bounds.width
-        let padding: CGFloat = 12
-        let minimumItemSpacing: CGFloat = 10
-        let availableWidth = width - (padding * 2) - (minimumItemSpacing * 2)
-        let itemWidth = availableWidth / 2
-
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.sectionInset = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
-        flowLayout.itemSize = CGSize(width: itemWidth, height: itemWidth)
-
-        return flowLayout
-    }
-
     private func updateData(on items: Results<DataModel>) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, DataModel>()
         snapshot.appendSections([.main])
@@ -82,7 +69,7 @@ class CardCollectionVC: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    func configureViewController() {
+    private func configureViewController() {
         view.backgroundColor = .systemBackground
         self.title = "Phrase Collection"
         let selectButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
@@ -122,7 +109,7 @@ class CardCollectionVC: UIViewController {
         }
     }
 
-    func configureSearchController() {
+    private func configureSearchController() {
         let searchController = UISearchController()
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "Search for your favorite phrase!"
@@ -232,6 +219,10 @@ extension CardCollectionVC: UICollectionViewDelegate {
             }
         }
     }
+}
+
+extension CardDetailVC {
+
 }
 
 #Preview {

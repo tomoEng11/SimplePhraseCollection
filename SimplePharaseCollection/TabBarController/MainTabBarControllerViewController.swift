@@ -16,7 +16,7 @@ class MainTabBarController: UITabBarController {
 
     private func setUpCardEdittingVC() -> UINavigationController {
         let cardEdittingVC = CardEdittingVC()
-        cardEdittingVC.tabBarItem = UITabBarItem(title: "Register", image: UIImage(systemName: "rectangle.portrait.badge.plus"), selectedImage: nil)
+        cardEdittingVC.tabBarItem = UITabBarItem(title: "New Card", image: UIImage(systemName: "rectangle.portrait.badge.plus"), selectedImage: nil)
         let navVC = UINavigationController(rootViewController: cardEdittingVC)
         navVC.navigationBar.prefersLargeTitles = true
         return navVC
