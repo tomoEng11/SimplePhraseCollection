@@ -175,10 +175,14 @@ final class CardEdittingVC: UIViewController {
         item.memo = memoTextView.text
         item.tag = tagTextView.text
 
-        try! realm.write {
-            realm.add(item)
+        do {
+            try realm.write {
+                realm.add(item)
+                presentAlertOnMainThread(title: "カードが追加されました", message: "", buttonTitle: "OK")
+            }
+        } catch {
+            print("error")
         }
-        presentAlertOnMainThread(title: "カードが追加されました", message: "", buttonTitle: "OK")
 
         sentenceTextView.text = ""
         memoTextView.text = ""
@@ -214,10 +218,14 @@ final class CardEdittingVC: UIViewController {
         item.memo = memoTextView.text
         item.tag = tagTextView.text
 
-        try! realm.write {
-            realm.add(item)
+        do {
+            try realm.write {
+                realm.add(item)
+                presentAlertOnMainThread(title: "カードが追加されました", message: "", buttonTitle: "OK")
+            }
+        } catch {
+            print("error")
         }
-        presentAlertOnMainThread(title: "カードが追加されました", message: "", buttonTitle: "OK")
 
         sentenceTextView.text = ""
         memoTextView.text = ""

@@ -101,7 +101,6 @@ final class CardCollectionVC: UIViewController {
             let items = realm.objects(DataModel.self)
             do {
                 try realm.write {
-
                     for item in items {
                         if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", item.sentence).first {
                             currentItem.isChecked = false
@@ -134,6 +133,7 @@ final class CardCollectionVC: UIViewController {
         updateData(on: newItems)
         //編集モードから抜ける
         editButtonPressed()
+        presentAlertOnMainThread(title: "カードが削除されました", message: "", buttonTitle: "OK")
     }
 
     //MARK: - ToolBar

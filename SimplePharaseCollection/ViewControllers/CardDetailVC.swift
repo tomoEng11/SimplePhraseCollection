@@ -19,6 +19,7 @@ final class CardDetailVC: UIViewController {
     private let cardView = UIView()
     let realm = try! Realm()
     private var previousItem: DataModel?
+    let toolBar = UIToolbar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,9 +172,7 @@ final class CardDetailVC: UIViewController {
 
     @objc private func dismissKeyboard(with gesture: UITapGestureRecognizer) {
         print("Other Areas Tapped!")
-        sentenceTextView.resignFirstResponder()
-        memoTextView.resignFirstResponder()
-        tagTextView.resignFirstResponder()
+        view.endEditing(true)
     }
 
     @objc private func naviEditButtonPressed() {
@@ -182,10 +181,10 @@ final class CardDetailVC: UIViewController {
         tagTextView.isEditable.toggle()
         scrollView.isScrollEnabled.toggle()
         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        toolBar.isHidden.toggle()
 
         if sentenceTextView.isEditable {
             sentenceTextView.becomeFirstResponder()
-
 
             if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", sentenceTextView.text!).first {
                 previousItem = currentItem
@@ -200,10 +199,12 @@ final class CardDetailVC: UIViewController {
         }
     }
 
+    //MARK: - ToolBar
+
     private func addToolBarToKeyboard() {
-        let toolBar = UIToolbar()
         toolBar.sizeToFit()
         toolBar.backgroundColor = .systemBackground
+        toolBar.isHidden = true
 
         let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
         let deleteButton = UIBarButtonItem(title: "delete", style: .plain, target: self, action: #selector(deleteButtonTapped))
@@ -254,18 +255,23 @@ final class CardDetailVC: UIViewController {
     }
     
     @objc private func navBarTapped() {
-        sentenceTextView.resignFirstResponder()
-        memoTextView.resignFirstResponder()
-        tagTextView.resignFirstResponder()
+        view.endEditing(true)
     }
 }
 
 extension CardDetailVC: UITextViewDelegate {
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        previousItem?.sentence = sentenceTextView.text
-        previousItem?.memo = memoTextView.text
-        previousItem?.tag = tagTextView.text
+
+        do {
+            try realm.write {
+                previousItem?.sentence = sentenceTextView.text
+                previousItem?.memo = memoTextView.text
+                previousItem?.tag = tagTextView.text
+            }
+        } catch {
+            print("error")
+        }
     }
 }
 
