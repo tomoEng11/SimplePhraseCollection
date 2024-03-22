@@ -10,17 +10,21 @@ import RealmSwift
 
 final class CardDetailVC: UIViewController {
 
-    private let tagLabel = CustomLabelTextView(fontSize: 12, backgroundColor: .systemOrange)
+    let tagTextView = CustomLabelTextView(fontSize: 12, backgroundColor: .systemOrange)
     let sentenceTextView = UITextView()
     let memoTextView = UITextView()
     private let stackView = UIStackView()
+    private let scrollView = UIScrollView()
+    private let scrollContentView = UIView()
     private let cardView = UIView()
     let realm = try! Realm()
-    var previousItem: DataModel?
+    private var previousItem: DataModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTagLabel()
+        configureScrollView()
+        configureScrollContentView()
+        configureTagTextView()
         configureSentenceTextView()
         configureMemoTextView()
         configureStackView()
@@ -29,23 +33,56 @@ final class CardDetailVC: UIViewController {
         addToolBarToKeyboard()
     }
 
-    private func configureCardView() {
-        view.addSubview(cardView)
-        cardView.backgroundColor = .systemBackground
-        cardView.layer.borderColor = UIColor.lightGray.cgColor
-        cardView.layer.borderWidth = 2
-        cardView.layer.masksToBounds = true
-        cardView.layer.cornerRadius = 24
-        cardView.translatesAutoresizingMaskIntoConstraints = false
+    //MARK: - ScrollView & ScrollContentView
+
+    private func configureScrollView() {
+        view.addSubview(scrollView)
+        scrollView.isScrollEnabled = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            cardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,  constant: 16),
-            cardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            cardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            cardView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24)
         ])
     }
 
+    private func configureScrollContentView() {
+        scrollView.addSubview(scrollContentView)
+        scrollContentView.backgroundColor = .systemBackground
+        scrollContentView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollContentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            scrollContentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            scrollContentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            scrollContentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            scrollContentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            scrollContentView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor, multiplier: 1.4)
+        ])
+    }
+
+    //MARK: - CardView
+    private func configureCardView() {
+        scrollContentView.addSubview(cardView)
+        cardView.backgroundColor = .systemBackground
+        cardView.layer.cornerRadius = 24
+        cardView.layer.borderWidth = 4
+        cardView.layer.borderColor = UIColor.systemGray.cgColor
+
+        cardView.layer.masksToBounds = true
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: scrollContentView.topAnchor),
+            cardView.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
+            cardView.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
+            cardView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, constant: -32)
+        ])
+    }
+
+    //MARK: - StackView
     private func configureStackView() {
         cardView.addSubview(stackView)
         stackView.axis = .vertical
@@ -57,23 +94,26 @@ final class CardDetailVC: UIViewController {
         stackView.layer.cornerRadius = 20
 
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: tagLabel.bottomAnchor, constant: 34),
+            stackView.topAnchor.constraint(equalTo: tagTextView.bottomAnchor, constant: 24),
             stackView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
             stackView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -24),
-            stackView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -34)
+            stackView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -24)
         ])
     }
 
-    private func configureTagLabel() {
-        cardView.addSubview(tagLabel)
-        tagLabel.text = "Phrase"
-        tagLabel.isEditable = false
+    //MARK: - StackView Components
+
+    private func configureTagTextView() {
+        cardView.addSubview(tagTextView)
+        tagTextView.text = "Phrase"
+        tagTextView.isEditable = false
+        tagTextView.delegate = self
 
         NSLayoutConstraint.activate([
-            tagLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
-            tagLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
-            tagLabel.heightAnchor.constraint(equalToConstant: 24),
-            tagLabel.widthAnchor.constraint(equalToConstant: 100)
+            tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
+            tagTextView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
+            tagTextView.heightAnchor.constraint(equalToConstant: 24),
+            tagTextView.widthAnchor.constraint(equalToConstant: 100)
         ])
     }
 
@@ -114,6 +154,8 @@ final class CardDetailVC: UIViewController {
         ])
     }
 
+    //MARK: - Configure ViewController
+
     private func configureViewController() {
         view.backgroundColor = .systemBackground
         let naviEditButton = UIBarButtonItem(title: "Edit", style: .plain, target: self , action: #selector(naviEditButtonPressed))
@@ -125,20 +167,25 @@ final class CardDetailVC: UIViewController {
                 navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
     }
 
+    //MARK: - Button Actions
+
     @objc private func dismissKeyboard(with gesture: UITapGestureRecognizer) {
         print("Other Areas Tapped!")
         sentenceTextView.resignFirstResponder()
         memoTextView.resignFirstResponder()
-        tagLabel.resignFirstResponder()
+        tagTextView.resignFirstResponder()
     }
 
     @objc private func naviEditButtonPressed() {
         memoTextView.isEditable.toggle()
         sentenceTextView.isEditable.toggle()
-        tagLabel.isEditable.toggle()
+        tagTextView.isEditable.toggle()
+        scrollView.isScrollEnabled.toggle()
+        scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
 
         if sentenceTextView.isEditable {
             sentenceTextView.becomeFirstResponder()
+
 
             if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", sentenceTextView.text!).first {
                 previousItem = currentItem
@@ -154,7 +201,6 @@ final class CardDetailVC: UIViewController {
     }
 
     private func addToolBarToKeyboard() {
-
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         toolBar.backgroundColor = .systemBackground
@@ -166,21 +212,21 @@ final class CardDetailVC: UIViewController {
         toolBar.items = [ spacer, deleteButton, spacer, saveButton, spacer]
         sentenceTextView.inputAccessoryView = toolBar
         memoTextView.inputAccessoryView = toolBar
-        tagLabel.inputAccessoryView = toolBar
+        tagTextView.inputAccessoryView = toolBar
     }
 
     @objc private func saveButtonTapped() {
         print("save tapped")
         memoTextView.isEditable.toggle()
         sentenceTextView.isEditable.toggle()
-        tagLabel.isEditable.toggle()
+        tagTextView.isEditable.toggle()
 
         if let newItem = realm.objects(DataModel.self).filter("sentence == %@", previousItem?.sentence).first {
             do {
                 try realm.write {
                     newItem.sentence = sentenceTextView.text
                     newItem.memo = memoTextView.text
-                    newItem.tag = tagLabel.text
+                    newItem.tag = tagTextView.text
                     realm.add(newItem)
                 }
             } catch {
@@ -206,16 +252,21 @@ final class CardDetailVC: UIViewController {
             self.navigationController?.popViewController(animated: true)
         }
     }
-
+    
     @objc private func navBarTapped() {
         sentenceTextView.resignFirstResponder()
         memoTextView.resignFirstResponder()
-        tagLabel.resignFirstResponder()
+        tagTextView.resignFirstResponder()
     }
 }
 
 extension CardDetailVC: UITextViewDelegate {
-    
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        previousItem?.sentence = sentenceTextView.text
+        previousItem?.memo = memoTextView.text
+        previousItem?.tag = tagTextView.text
+    }
 }
 
 #Preview {

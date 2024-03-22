@@ -29,7 +29,6 @@ final class CardCollectionVC: UIViewController {
         configureSearchController()
         configureViewController()
         configureToolBar()
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -37,6 +36,8 @@ final class CardCollectionVC: UIViewController {
         let items = realm.objects(DataModel.self)
         updateData(on: items)
     }
+
+    //MARK: - DataSource
 
     private func configureDataSource() {
         dataSource = UICollectionViewDiffableDataSource(
@@ -53,6 +54,8 @@ final class CardCollectionVC: UIViewController {
         )
     }
 
+    //MARK: - CollectionView
+
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createTwoColumnFlowLayout(in: view))
         view.addSubview(collectionView)
@@ -62,6 +65,8 @@ final class CardCollectionVC: UIViewController {
         collectionView.allowsMultipleSelection = false
     }
 
+    //MARK: - Snapshot
+
     private func updateData(on items: Results<DataModel>) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, DataModel>()
         snapshot.appendSections([.main])
@@ -69,12 +74,16 @@ final class CardCollectionVC: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
+    //MARK: - Configure ViewController
+
     private func configureViewController() {
         view.backgroundColor = .systemBackground
         self.title = "Phrase Collection"
         let selectButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
         navigationItem.rightBarButtonItem = selectButton
     }
+
+    //MARK: - Button Actions
 
     @objc private func editButtonPressed() {
         collectionView.allowsMultipleSelection.toggle()
@@ -109,55 +118,6 @@ final class CardCollectionVC: UIViewController {
         }
     }
 
-    private func configureSearchController() {
-        let searchController = UISearchController()
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search for your favorite phrase!"
-        searchController.searchBar.delegate = self
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        isSearching = false
-        let items = realm.objects(DataModel.self)
-        updateData(on: items)
-    }
-
-    private func configureToolBar() {
-        view.addSubview(toolBar)
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
-        toolBar.sizeToFit()
-        toolBar.backgroundColor = .systemBackground
-        toolBar.isHidden = true
-
-        NSLayoutConstraint.activate([
-            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            toolBar.widthAnchor.constraint(equalTo: view.widthAnchor),
-            toolBar.heightAnchor.constraint(equalToConstant: 55)
-        ])
-
-        // スペーサー構築
-        let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
-        // 削除ボタン構築
-
-        let deleteButton = UIBarButtonItem(title: "delete", style: .plain, target: self, action: #selector(deleteButtonTapped))
-
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(editButtonPressed))
-
-        toolBar.items = [ spacer, deleteButton, spacer, cancelButton, spacer]
-        let lineView = UIView()
-        lineView.backgroundColor = .secondarySystemBackground // グレーのラインを作成
-
-        // 2. ToolBarまたはTabBarにビューを追加します。
-        toolBar.addSubview(lineView)
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true // ラインの高さを設定
-        lineView.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor).isActive = true // ToolBarの左端に配置
-        lineView.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor).isActive = true // ToolBarの右端に配置
-        lineView.bottomAnchor.constraint(equalTo: toolBar.bottomAnchor).isActive = true // ToolBarの上端に配置
-    }
-
     @objc private func deleteButtonTapped() {
         print("delete tapped")
         let items = realm.objects(DataModel.self).filter("isChecked == true")
@@ -175,7 +135,59 @@ final class CardCollectionVC: UIViewController {
         //編集モードから抜ける
         editButtonPressed()
     }
+
+    //MARK: - ToolBar
+
+    private func configureToolBar() {
+        view.addSubview(toolBar)
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.sizeToFit()
+        toolBar.backgroundColor = .systemBackground
+        toolBar.isHidden = true
+
+        NSLayoutConstraint.activate([
+            toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            toolBar.widthAnchor.constraint(equalTo: view.widthAnchor),
+            toolBar.heightAnchor.constraint(equalToConstant: 55)
+        ])
+
+        let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
+
+        let deleteButton = UIBarButtonItem(title: "delete", style: .plain, target: self, action: #selector(deleteButtonTapped))
+
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(editButtonPressed))
+
+        toolBar.items = [ spacer, deleteButton, spacer, cancelButton, spacer]
+        let lineView = UIView()
+        lineView.backgroundColor = .secondarySystemBackground
+
+        toolBar.addSubview(lineView)
+        lineView.translatesAutoresizingMaskIntoConstraints = false
+        lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        lineView.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor).isActive = true
+        lineView.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor).isActive = true
+        lineView.bottomAnchor.constraint(equalTo: toolBar.bottomAnchor).isActive = true
+    }
+
+    //MARK: - SearchBar
+
+    private func configureSearchController() {
+        let searchController = UISearchController()
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search for your favorite phrase!"
+        searchController.searchBar.delegate = self
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        isSearching = false
+        let items = realm.objects(DataModel.self)
+        updateData(on: items)
+    }
 }
+
+//MARK: - SearchBar Delegate
 
 extension CardCollectionVC: UISearchResultsUpdating, UISearchBarDelegate {
     func updateSearchResults(for searchController: UISearchController) {
@@ -187,6 +199,8 @@ extension CardCollectionVC: UISearchResultsUpdating, UISearchBarDelegate {
         updateData(on: filteredItem)
     }
 }
+
+//MARK: - CollectionView Delegate
 
 extension CardCollectionVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -215,18 +229,14 @@ extension CardCollectionVC: UICollectionViewDelegate {
                 let destinationVC = CardDetailVC()
                 destinationVC.sentenceTextView.text = selectedItem.sentence
                 destinationVC.memoTextView.text = selectedItem.memo
+                destinationVC.tagTextView.text = selectedItem.tag
                 navigationController?.pushViewController(destinationVC, animated: true)
             }
         }
     }
 }
 
-extension CardDetailVC {
-
-}
-
 #Preview {
     let vc = CardCollectionVC()
     return vc
 }
-
