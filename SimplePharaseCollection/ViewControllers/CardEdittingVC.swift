@@ -153,11 +153,19 @@ final class CardEdittingVC: UIViewController {
         view.backgroundColor = .systemBackground
         self.title = "New Card"
 
-        let addButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addButtonPressed))
+        let addButton = UIBarButtonItem(
+            title: "Add",
+            style: .plain,
+            target: self,
+            action: #selector(addButtonPressed))
+        
         navigationItem.rightBarButtonItem = addButton
 
-        let tapGestureForNavi = UITapGestureRecognizer(target: self, action: #selector(navBarTapped))
-                navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
+        let tapGestureForNavi = UITapGestureRecognizer(
+            target: self,
+            action: #selector(navBarTapped))
+               
+        navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
     }
 
     //MARK: - Button Actions
@@ -170,7 +178,7 @@ final class CardEdittingVC: UIViewController {
             return
         }
 
-        let item = DataModel()
+        let item = ItemData()
         item.sentence = sentenceTextView.text
         item.memo = memoTextView.text
         item.tag = tagTextView.text
@@ -213,7 +221,7 @@ final class CardEdittingVC: UIViewController {
             return
         }
 
-        let item = DataModel()
+        let item = ItemData()
         item.sentence = sentenceTextView.text
         item.memo = memoTextView.text
         item.tag = tagTextView.text

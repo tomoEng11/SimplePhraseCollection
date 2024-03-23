@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomLabelTextView: UITextView {
+final class CustomLabelTextView: UITextView {
 
     init(fontSize: CGFloat, backgroundColor: UIColor) {
         super.init(frame: .zero, textContainer: nil)

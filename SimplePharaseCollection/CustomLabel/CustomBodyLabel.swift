@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomBodyLabel: UILabel {
+final class CustomBodyLabel: UILabel {
 
     override init(frame: CGRect) {
         super.init(frame: frame)

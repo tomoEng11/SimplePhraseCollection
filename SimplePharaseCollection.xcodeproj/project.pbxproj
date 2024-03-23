@@ -19,7 +19,7 @@
 		BB90FAD72BA9D1D3009B85ED /* CardDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAD62BA9D1D3009B85ED /* CardDetailVC.swift */; };
 		BB90FAD92BA9D203009B85ED /* CardCollectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAD82BA9D203009B85ED /* CardCollectionVC.swift */; };
 		BB90FADB2BA9D23A009B85ED /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FADA2BA9D23A009B85ED /* AlertVC.swift */; };
-		BB90FADD2BA9D287009B85ED /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FADC2BA9D287009B85ED /* DataModel.swift */; };
+		BB90FADD2BA9D287009B85ED /* ItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FADC2BA9D287009B85ED /* ItemData.swift */; };
 		BB90FAE32BA9D32F009B85ED /* CustomTitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAE22BA9D32F009B85ED /* CustomTitleLabel.swift */; };
 		BB90FAE52BA9D359009B85ED /* CustomBodyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAE42BA9D359009B85ED /* CustomBodyLabel.swift */; };
 		BB90FAE72BA9D3BC009B85ED /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAE62BA9D3BC009B85ED /* UIViewController+Extension.swift */; };
@@ -45,7 +45,7 @@
 		BB90FAD62BA9D1D3009B85ED /* CardDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailVC.swift; sourceTree = "<group>"; };
 		BB90FAD82BA9D203009B85ED /* CardCollectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionVC.swift; sourceTree = "<group>"; };
 		BB90FADA2BA9D23A009B85ED /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
-		BB90FADC2BA9D287009B85ED /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		BB90FADC2BA9D287009B85ED /* ItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemData.swift; sourceTree = "<group>"; };
 		BB90FAE22BA9D32F009B85ED /* CustomTitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTitleLabel.swift; sourceTree = "<group>"; };
 		BB90FAE42BA9D359009B85ED /* CustomBodyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBodyLabel.swift; sourceTree = "<group>"; };
 		BB90FAE62BA9D3BC009B85ED /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		BB90FADE2BA9D2A7009B85ED /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				BB90FADC2BA9D287009B85ED /* DataModel.swift */,
+				BB90FADC2BA9D287009B85ED /* ItemData.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -326,7 +326,7 @@
 				BB90FAF02BA9D544009B85ED /* UIHelper.swift in Sources */,
 				BB90FAEA2BA9D41B009B85ED /* CardCollectionViewCell.swift in Sources */,
 				BB90FAE52BA9D359009B85ED /* CustomBodyLabel.swift in Sources */,
-				BB90FADD2BA9D287009B85ED /* DataModel.swift in Sources */,
+				BB90FADD2BA9D287009B85ED /* ItemData.swift in Sources */,
 				BB90FAD12BA9D123009B85ED /* MainTabBarControllerViewController.swift in Sources */,
 				BB90FADB2BA9D23A009B85ED /* AlertVC.swift in Sources */,
 				BB277A0D2BAB12030018F12B /* CustomLabelTextView.swift in Sources */,

@@ -18,7 +18,7 @@ final class CardDetailVC: UIViewController {
     private let scrollContentView = UIView()
     private let cardView = UIView()
     let realm = try! Realm()
-    private var previousItem: DataModel?
+    var previousItem: ItemData?
     let toolBar = UIToolbar()
 
     override func viewDidLoad() {
@@ -32,6 +32,15 @@ final class CardDetailVC: UIViewController {
         configureCardView()
         configureViewController()
         addToolBarToKeyboard()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard previousItem != nil else { return }
+        tagTextView.text = previousItem?.tag
+        sentenceTextView.text = previousItem?.sentence
+        memoTextView.text = previousItem?.memo
     }
 
     //MARK: - ScrollView & ScrollContentView
@@ -108,7 +117,7 @@ final class CardDetailVC: UIViewController {
         cardView.addSubview(tagTextView)
         tagTextView.text = "Phrase"
         tagTextView.isEditable = false
-        tagTextView.delegate = self
+//        tagTextView.delegate = self
 
         NSLayoutConstraint.activate([
             tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
@@ -126,7 +135,7 @@ final class CardDetailVC: UIViewController {
         sentenceTextView.textAlignment = .left
         sentenceTextView.translatesAutoresizingMaskIntoConstraints = false
         sentenceTextView.backgroundColor = .secondarySystemBackground
-        sentenceTextView.delegate = self
+//        sentenceTextView.delegate = self
 
         NSLayoutConstraint.activate([
             sentenceTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
@@ -145,7 +154,7 @@ final class CardDetailVC: UIViewController {
         memoTextView.textAlignment = .left
         memoTextView.translatesAutoresizingMaskIntoConstraints = false
         memoTextView.backgroundColor = .secondarySystemBackground
-        memoTextView.delegate = self
+//        memoTextView.delegate = self
 
         NSLayoutConstraint.activate([
             memoTextView.topAnchor.constraint(equalTo: sentenceTextView.bottomAnchor, constant: 24),
@@ -229,13 +238,12 @@ final class CardDetailVC: UIViewController {
                     newItem.memo = memoTextView.text
                     newItem.tag = tagTextView.text
                     realm.add(newItem)
+                    presentAlertOnMainThread(title: "カードが保存されました", message: "", buttonTitle: "OK")
                 }
             } catch {
                 print("error")
             }
         }
-        presentAlertOnMainThread(title: "カードが保存されました", message: "", buttonTitle: "OK")
-
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -249,7 +257,6 @@ final class CardDetailVC: UIViewController {
             } catch {
                 print("deleteできませんでした")
             }
-            presentAlertOnMainThread(title: "削除が完了しました", message: "", buttonTitle: "OK")
             self.navigationController?.popViewController(animated: true)
         }
     }
@@ -259,21 +266,6 @@ final class CardDetailVC: UIViewController {
     }
 }
 
-extension CardDetailVC: UITextViewDelegate {
-
-    func textViewDidBeginEditing(_ textView: UITextView) {
-
-        do {
-            try realm.write {
-                previousItem?.sentence = sentenceTextView.text
-                previousItem?.memo = memoTextView.text
-                previousItem?.tag = tagTextView.text
-            }
-        } catch {
-            print("error")
-        }
-    }
-}
 
 #Preview {
     let vc = CardDetailVC()

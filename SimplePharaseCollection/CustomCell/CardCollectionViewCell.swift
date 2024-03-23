@@ -25,7 +25,7 @@ class CardCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func set(with item: DataModel) {
+    func set(with item: ItemData) {
         self.sentenceLabel.text = item.sentence
         self.tagLabel.text = item.tag
         self.backgroundColor = .systemBackground
@@ -81,7 +81,7 @@ class CardCollectionViewCell: UICollectionViewCell {
         ])
     }
 
-    func reverseIsSelected(item: DataModel) {
+    func reverseIsSelected(item: ItemData) {
         checkmarkImageView.isHidden = !item.isChecked
     }
 }

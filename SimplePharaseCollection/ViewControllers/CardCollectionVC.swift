@@ -15,14 +15,15 @@ final class CardCollectionVC: UIViewController {
     }
 
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, DataModel>!
+    var dataSource: UICollectionViewDiffableDataSource<Section, ItemData>!
     private var isSearching: Bool = false
     private let realm = try! Realm()
     private let toolBar = UIToolbar()
 
     override func viewDidLoad() {
-        let items = realm.objects(DataModel.self)
+
         super.viewDidLoad()
+        let items = realm.objects(ItemData.self)
         configureCollectionView()
         configureDataSource()
         updateData(on: items)
@@ -33,8 +34,9 @@ final class CardCollectionVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let items = realm.objects(DataModel.self)
+        let items = realm.objects(ItemData.self)
         updateData(on: items)
+        print("viewWillAppear")
     }
 
     //MARK: - DataSource
@@ -53,6 +55,16 @@ final class CardCollectionVC: UIViewController {
             }
         )
     }
+
+    //MARK: - Snapshot
+
+    func updateData(on items: Results<ItemData>) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, ItemData>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(Array(items))
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
+
 
     //MARK: - CollectionView
 
@@ -98,28 +110,29 @@ final class CardCollectionVC: UIViewController {
             let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
             navigationItem.rightBarButtonItem = editButton
 
-            let items = realm.objects(DataModel.self)
+            let items = realm.objects(ItemData.self)
             do {
                 try realm.write {
-                    for item in items {
-                        if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", item.sentence).first {
-                            currentItem.isChecked = false
-                        }
-                    }
+//                    for item in items {
+//                        if let currentItem = realm.objects(ItemData.self).filter("sentence == %@", item.sentence).first {
+//                            currentItem.isChecked = false
+//                        }
+//                    }
+                    items.setValue(false, forKey: "isChecked")
                 }
             } catch {
                 print("error")
             }
             print("キャンセルボタンが押されました")
-            let newitems = realm.objects(DataModel.self)
-            updateData(on: newitems)
+            let newItems = realm.objects(ItemData.self)
+            updateData(on: newItems)
             toolBar.isHidden = true
         }
     }
 
     @objc private func deleteButtonTapped() {
         print("delete tapped")
-        let items = realm.objects(DataModel.self).filter("isChecked == true")
+        let items = realm.objects(ItemData.self).filter("isChecked == true")
         do {
             try realm.write {
                 for item in items {
@@ -129,7 +142,7 @@ final class CardCollectionVC: UIViewController {
         } catch {
             print("error")
         }
-        let newItems = realm.objects(DataModel.self)
+        let newItems = realm.objects(ItemData.self)
         updateData(on: newItems)
         //編集モードから抜ける
         editButtonPressed()
@@ -151,16 +164,27 @@ final class CardCollectionVC: UIViewController {
             toolBar.heightAnchor.constraint(equalToConstant: 55)
         ])
 
-        let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
+        let spacer = UIBarButtonItem(
+            barButtonSystemItem:UIBarButtonItem.SystemItem.flexibleSpace,
+            target: self,
+            action: nil)
 
-        let deleteButton = UIBarButtonItem(title: "delete", style: .plain, target: self, action: #selector(deleteButtonTapped))
+        let deleteButton = UIBarButtonItem(
+            title: "delete",
+            style: .plain,
+            target: self,
+            action: #selector(deleteButtonTapped))
 
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(editButtonPressed))
+        let cancelButton = UIBarButtonItem(
+            title: "Cancel",
+            style: .plain,
+            target: self,
+            action: #selector(editButtonPressed))
 
         toolBar.items = [ spacer, deleteButton, spacer, cancelButton, spacer]
+        
         let lineView = UIView()
         lineView.backgroundColor = .secondarySystemBackground
-
         toolBar.addSubview(lineView)
         lineView.translatesAutoresizingMaskIntoConstraints = false
         lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
@@ -182,7 +206,7 @@ final class CardCollectionVC: UIViewController {
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         isSearching = false
-        let items = realm.objects(DataModel.self)
+        let items = realm.objects(ItemData.self)
         updateData(on: items)
     }
 }
@@ -194,7 +218,7 @@ extension CardCollectionVC: UISearchResultsUpdating, UISearchBarDelegate {
         guard let filter = searchController.searchBar.text, !filter.isEmpty else { return }
         isSearching = true
 
-        let filteredItem = realm.objects(DataModel.self).filter("sentence contains '\(filter.lowercased())' OR sentence contains '\(filter.uppercased())'")
+        let filteredItem = realm.objects(ItemData.self).filter("sentence contains '\(filter.lowercased())' OR sentence contains '\(filter.uppercased())'")
 
         updateData(on: filteredItem)
     }
@@ -204,7 +228,7 @@ extension CardCollectionVC: UISearchResultsUpdating, UISearchBarDelegate {
 
 extension CardCollectionVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("セルをタップしました：\(indexPath)")
+
         if collectionView.allowsMultipleSelection {
             print("編集モードでセルが押されました")
 
@@ -219,7 +243,7 @@ extension CardCollectionVC: UICollectionViewDelegate {
                     } catch {
                         print("error")
                     }
-                    let items = realm.objects(DataModel.self)
+                    let items = realm.objects(ItemData.self)
                     updateData(on: items)
                 }
             }
@@ -227,9 +251,7 @@ extension CardCollectionVC: UICollectionViewDelegate {
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
 
                 let destinationVC = CardDetailVC()
-                destinationVC.sentenceTextView.text = selectedItem.sentence
-                destinationVC.memoTextView.text = selectedItem.memo
-                destinationVC.tagTextView.text = selectedItem.tag
+                destinationVC.previousItem = selectedItem
                 navigationController?.pushViewController(destinationVC, animated: true)
             }
         }
