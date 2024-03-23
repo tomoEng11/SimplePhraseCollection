@@ -171,27 +171,38 @@ final class CardEdittingVC: UIViewController {
     //MARK: - Button Actions
 
     @objc private func addButtonPressed() {
-        print("Add Button Pressed")
 
         guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
-            presentAlertOnMainThread(title: "Type something.", message: "", buttonTitle: "OK")
+            presentAlertOnMainThread(
+                title: "Type something.",
+                message: "",
+                buttonTitle: "OK")
             return
         }
+        addNewItem()
+        resetCardView()
+    }
 
-        let item = ItemData()
-        item.sentence = sentenceTextView.text
-        item.memo = memoTextView.text
-        item.tag = tagTextView.text
+    private func addNewItem() {
+        let newItem = ItemData()
+        newItem.sentence = sentenceTextView.text
+        newItem.memo = memoTextView.text
+        newItem.tag = tagTextView.text
 
         do {
             try realm.write {
-                realm.add(item)
-                presentAlertOnMainThread(title: "カードが追加されました", message: "", buttonTitle: "OK")
+                realm.add(newItem)
+                presentAlertOnMainThread(
+                    title: "カードが追加されました",
+                    message: "",
+                    buttonTitle: "OK")
             }
         } catch {
             print("error")
         }
+    }
 
+    private func resetCardView() {
         sentenceTextView.text = ""
         memoTextView.text = ""
         tagTextView.text = "Phrase"
@@ -200,44 +211,18 @@ final class CardEdittingVC: UIViewController {
     }
 
     private func configureTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(with:)))
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard(with:)))
         view.addGestureRecognizer(tapGesture)
     }
 
     @objc private func dismissKeyboard(with gesture: UITapGestureRecognizer) {
-        print("Other Areas Tapped!")
         view.endEditing(true)
     }
 
     @objc private func navBarTapped() {
         view.endEditing(true)
-    }
-
-    @objc private func doneButtonPressed(with gesture: UITapGestureRecognizer) {
-        print("Done Button Pressed")
-
-        guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
-            presentAlertOnMainThread(title: "Type something", message: "", buttonTitle: "OK")
-            return
-        }
-
-        let item = ItemData()
-        item.sentence = sentenceTextView.text
-        item.memo = memoTextView.text
-        item.tag = tagTextView.text
-       
-        do {
-            try realm.write {
-                realm.add(item)
-                presentAlertOnMainThread(title: "カードが追加されました", message: "", buttonTitle: "OK")
-            }
-        } catch {
-            print("error")
-        }
-
-        sentenceTextView.text = ""
-        memoTextView.text = ""
-        tagTextView.text = ""
     }
 }
 

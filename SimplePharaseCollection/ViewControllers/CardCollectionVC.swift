@@ -82,7 +82,10 @@ final class CardCollectionVC: UIViewController {
     private func configureViewController() {
         view.backgroundColor = .systemBackground
         self.title = "Phrase Collection"
-        let selectButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
+        let selectButton = UIBarButtonItem(
+            barButtonSystemItem: .edit,
+            target: self,
+            action: #selector(editButtonPressed))
         navigationItem.rightBarButtonItem = selectButton
     }
 
@@ -93,12 +96,18 @@ final class CardCollectionVC: UIViewController {
 
         if collectionView.allowsMultipleSelection {
             toolBar.isHidden = false
-            let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(editButtonPressed))
+            let cancelButton = UIBarButtonItem(
+                barButtonSystemItem: .cancel,
+                target: self,
+                action: #selector(editButtonPressed))
             navigationItem.rightBarButtonItem = cancelButton
             print("編集ボタンが押されました")
 
         } else {
-            let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonPressed))
+            let editButton = UIBarButtonItem(
+                barButtonSystemItem: .edit,
+                target: self, 
+                action: #selector(editButtonPressed))
             navigationItem.rightBarButtonItem = editButton
 
             let items = realm.objects(ItemData.self)
@@ -221,27 +230,13 @@ extension CardCollectionVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         if collectionView.allowsMultipleSelection {
-            print("編集モードでセルが押されました")
+            //編集中にセルをタップした時
 
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-                print("selectedItem: \(selectedItem)")
-
-                if let currentItem = realm.objects(ItemData.self).filter("id == %@", selectedItem.id).first {
-
-                    print("currentItem: \(currentItem)")
-                    do {
-                        try realm.write {
-                            currentItem.isChecked.toggle()
-                            realm.add(currentItem)
-                        }
-                    } catch {
-                        print("error")
-                    }
-                    let items = realm.objects(ItemData.self)
-                    updateData(on: items)
-                }
+                removeCheckmarkAndUpdateData(selectedItem: selectedItem)
             }
         } else {
+            //編集せずセルをタップした時
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
 
                 let destinationVC = CardDetailVC()
@@ -249,6 +244,22 @@ extension CardCollectionVC: UICollectionViewDelegate {
                 navigationController?.pushViewController(destinationVC, animated: true)
             }
         }
+    }
+
+    func removeCheckmarkAndUpdateData(selectedItem: ItemData) {
+        if let currentItem = realm.objects(ItemData.self).filter("id == %@", selectedItem.id).first {
+
+                do {
+                    try realm.write {
+                        currentItem.isChecked.toggle()
+                        realm.add(currentItem)
+                    }
+                } catch {
+                    print("error")
+                }
+                let items = realm.objects(ItemData.self)
+                updateData(on: items)
+            }
     }
 }
 //
