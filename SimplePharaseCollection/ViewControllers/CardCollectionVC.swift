@@ -77,15 +77,6 @@ final class CardCollectionVC: UIViewController {
         collectionView.allowsMultipleSelection = false
     }
 
-    //MARK: - Snapshot
-
-    private func updateData(on items: Results<DataModel>) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, DataModel>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(Array(items))
-        dataSource.apply(snapshot, animatingDifferences: true)
-    }
-
     //MARK: - Configure ViewController
 
     private func configureViewController() {
@@ -113,12 +104,12 @@ final class CardCollectionVC: UIViewController {
             let items = realm.objects(ItemData.self)
             do {
                 try realm.write {
-//                    for item in items {
-//                        if let currentItem = realm.objects(ItemData.self).filter("sentence == %@", item.sentence).first {
-//                            currentItem.isChecked = false
-//                        }
-//                    }
-                    items.setValue(false, forKey: "isChecked")
+                    for item in items {
+                        if let currentItem = realm.objects(ItemData.self).filter("id == %@", item.id).first {
+                            currentItem.isChecked = false
+                        }
+                    }
+
                 }
             } catch {
                 print("error")
@@ -233,8 +224,11 @@ extension CardCollectionVC: UICollectionViewDelegate {
             print("編集モードでセルが押されました")
 
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
+                print("selectedItem: \(selectedItem)")
 
-                if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", selectedItem.sentence).first {
+                if let currentItem = realm.objects(ItemData.self).filter("id == %@", selectedItem.id).first {
+
+                    print("currentItem: \(currentItem)")
                     do {
                         try realm.write {
                             currentItem.isChecked.toggle()
@@ -257,8 +251,8 @@ extension CardCollectionVC: UICollectionViewDelegate {
         }
     }
 }
-
-#Preview {
-    let vc = CardCollectionVC()
-    return vc
-}
+//
+//#Preview {
+//    let vc = CardCollectionVC()
+//    return vc
+//}

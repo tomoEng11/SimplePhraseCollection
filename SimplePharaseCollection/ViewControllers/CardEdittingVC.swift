@@ -225,7 +225,7 @@ final class CardEdittingVC: UIViewController {
         item.sentence = sentenceTextView.text
         item.memo = memoTextView.text
         item.tag = tagTextView.text
-
+       
         do {
             try realm.write {
                 realm.add(item)

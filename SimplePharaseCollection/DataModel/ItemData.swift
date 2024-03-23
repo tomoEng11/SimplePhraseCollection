@@ -9,13 +9,13 @@ import Foundation
 import RealmSwift
 
 class ItemData: Object {
-    @objc dynamic var primaryKeyId = UUID().uuidString
+    @objc dynamic var id: String
     @objc dynamic var sentence: String = ""
     @objc dynamic var memo: String = ""
     @objc dynamic var tag: String = ""
     @objc dynamic var isChecked = false
 
-    override static func primaryKey() -> String? {
-        return "primaryKeyId"
+    override init() {
+        self.id = UUID().uuidString
     }
 }

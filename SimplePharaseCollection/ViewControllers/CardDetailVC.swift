@@ -173,7 +173,9 @@ final class CardDetailVC: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(with:)))
         view.addGestureRecognizer(tapGesture)
 
-        let tapGestureForNavi = UITapGestureRecognizer(target: self, action: #selector(navBarTapped))
+        let tapGestureForNavi = UITapGestureRecognizer(
+            target: self,
+            action: #selector(navBarTapped))
                 navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
     }
 
@@ -195,8 +197,9 @@ final class CardDetailVC: UIViewController {
         if sentenceTextView.isEditable {
             sentenceTextView.becomeFirstResponder()
 
-            if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", sentenceTextView.text!).first {
-                previousItem = currentItem
+//            guard previousItem != nil else { return }
+
+            if let currentItem = realm.objects(ItemData.self).filter("id == %@", previousItem?.id).first {
             }
             print("編集中")
             let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self , action: #selector(naviEditButtonPressed))
@@ -231,7 +234,9 @@ final class CardDetailVC: UIViewController {
         sentenceTextView.isEditable.toggle()
         tagTextView.isEditable.toggle()
 
-        if let newItem = realm.objects(DataModel.self).filter("sentence == %@", previousItem?.sentence).first {
+        //            guard previousItem != nil else { return }
+
+        if let newItem = realm.objects(ItemData.self).filter("id == %@", previousItem?.id).first {
             do {
                 try realm.write {
                     newItem.sentence = sentenceTextView.text
@@ -249,10 +254,12 @@ final class CardDetailVC: UIViewController {
 
     @objc private func deleteButtonTapped() {
         print("delete tapped")
-        if let currentItem = realm.objects(DataModel.self).filter("sentence == %@", sentenceTextView.text!).first {
+
+        if let currentItem = realm.objects(ItemData.self).filter("id == %@", previousItem?.id).first {
             do {
                 try realm.write {
                     realm.delete(currentItem)
+                    presentAlertOnMainThread(title: "カードが削除されました", message: "", buttonTitle: "OK")
                 }
             } catch {
                 print("deleteできませんでした")
@@ -267,7 +274,7 @@ final class CardDetailVC: UIViewController {
 }
 
 
-#Preview {
-    let vc = CardDetailVC()
-    return vc
-}
+//#Preview {
+//    let vc = CardDetailVC()
+//    return vc
+//}
