@@ -187,7 +187,7 @@ extension NewCardVC {
 
     @objc private func addButtonPressed() {
         guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
-            presentAlertOnMainThread(
+            presentErrorAlert(
                 title: "フレーズセクションが空です。",
                 message: "フレーズセクションにフレーズを入力してください。",
                 buttonTitle: "OK")
@@ -196,9 +196,15 @@ extension NewCardVC {
 
         do {
             try realmModel.createData(sentence: sentenceTextView.text, memo: memoTextView.text, tag: tagTextView.text)
-            presentAlertOnMainThread(title: "カードが追加されました。", message: "", buttonTitle: "OK")
+            presentAlert(
+                title: "カードが追加されました。",
+                message: "",
+                buttonTitle: "OK")
         } catch {
-            print(error)
+            presentErrorAlert(
+                title: CRUDError.create.description,
+                message: "",
+                buttonTitle: "OK")
         }
         resetCardView()
     }

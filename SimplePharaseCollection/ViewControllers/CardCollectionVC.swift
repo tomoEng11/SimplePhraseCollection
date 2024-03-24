@@ -58,13 +58,12 @@ final class CardCollectionVC: UIViewController {
 
     //MARK: - Snapshot
 
-    func updateData(with items: Results<ItemData>) {
+    private func updateData(with items: Results<ItemData>) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, ItemData>()
         snapshot.appendSections([.main])
         snapshot.appendItems(Array(items))
         dataSource.apply(snapshot, animatingDifferences: true)
     }
-
 
     //MARK: - CollectionView
 
@@ -76,8 +75,67 @@ final class CardCollectionVC: UIViewController {
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
     }
+}
 
-    //MARK: - Configure ViewController
+//MARK: - SearchBar Delegate
+
+extension CardCollectionVC: UISearchResultsUpdating, UISearchBarDelegate {
+
+    //MARK: - SearchBar
+
+    private func configureSearchController() {
+        let searchController = UISearchController()
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search for your favorite phrase!"
+        searchController.searchBar.delegate = self
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        isSearching = false
+        updateData(with: realmModel.readItems())
+    }
+
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let filter = searchController.searchBar.text, !filter.isEmpty else { return }
+        isSearching = true
+        updateData(with: realmModel.readFilteredItems(filter: filter))
+    }
+}
+
+//MARK: - CollectionView Delegate
+
+extension CardCollectionVC: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        if collectionView.allowsMultipleSelection {
+            //編集中にセルをタップした時のキャンセル処理
+
+            if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
+                do {
+                    try realmModel.removeCheckmark(for: selectedItem)
+                } catch {
+                    presentErrorAlert(
+                        title: CRUDError.unknown.description,
+                        message: "",
+                        buttonTitle: "OK")
+                }
+                updateData(with: realmModel.readItems())
+            }
+        } else {
+            //編集せずセルをタップした時の画面遷移処理
+            if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
+                let destinationVC = CardDetailVC()
+                destinationVC.previousItem = selectedItem
+                navigationController?.pushViewController(destinationVC, animated: true)
+            }
+        }
+    }
+}
+
+extension CardCollectionVC {
+    //MARK: - ViewController Setting
 
     private func configureViewController() {
         view.backgroundColor = .systemBackground
@@ -102,7 +160,7 @@ final class CardCollectionVC: UIViewController {
 //        }
 //    }
 
-    //MARK: - Button Actions
+    //MARK: - NavButton Actions
 
     @objc private func navBarButtonPressed() {
         collectionView.allowsMultipleSelection.toggle()
@@ -120,14 +178,17 @@ final class CardCollectionVC: UIViewController {
             //キャンセルボタンを押した時の処理
             let editButton = UIBarButtonItem(
                 barButtonSystemItem: .edit,
-                target: self, 
+                target: self,
                 action: #selector(navBarButtonPressed))
             navigationItem.rightBarButtonItem = editButton
 
             do {
                 try realmModel.removeAllCheckmark()
             } catch {
-                print("error")
+                presentErrorAlert(
+                    title: CRUDError.unknown.description,
+                    message: "",
+                    buttonTitle: "OK")
             }
             updateData(with: realmModel.readItems())
             toolBar.isHidden = true
@@ -137,16 +198,19 @@ final class CardCollectionVC: UIViewController {
     @objc private func deleteButtonTapped() {
         do {
             try realmModel.deleteItems()
+            presentAlert(
+                title: "カードが削除されました",
+                message: "",
+                buttonTitle: "OK")
         } catch {
-            print(error)
+            presentErrorAlert(
+                title: CRUDError.delete.description,
+                message: "",
+                buttonTitle: "OK")
         }
         updateData(with: realmModel.readItems())
         //編集モードから抜ける
         navBarButtonPressed()
-        presentAlertOnMainThread(
-            title: "カードが削除されました",
-            message: "",
-            buttonTitle: "OK")
 //        checkItemEmptyAndShowEmptyView(items: newItems)
     }
 
@@ -183,7 +247,7 @@ final class CardCollectionVC: UIViewController {
             action: #selector(navBarButtonPressed))
 
         toolBar.items = [ spacer, deleteButton, spacer, cancelButton, spacer]
-        
+
         let lineView = UIView()
         lineView.backgroundColor = .secondarySystemBackground
         toolBar.addSubview(lineView)
@@ -192,58 +256,5 @@ final class CardCollectionVC: UIViewController {
         lineView.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor).isActive = true
         lineView.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor).isActive = true
         lineView.bottomAnchor.constraint(equalTo: toolBar.bottomAnchor).isActive = true
-    }
-
-    //MARK: - SearchBar
-
-    private func configureSearchController() {
-        let searchController = UISearchController()
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search for your favorite phrase!"
-        searchController.searchBar.delegate = self
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        isSearching = false
-        updateData(with: realmModel.readItems())
-    }
-}
-
-//MARK: - SearchBar Delegate
-
-extension CardCollectionVC: UISearchResultsUpdating, UISearchBarDelegate {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let filter = searchController.searchBar.text, !filter.isEmpty else { return }
-        isSearching = true
-        updateData(with: realmModel.readFilteredItems(filter: filter))
-    }
-}
-
-//MARK: - CollectionView Delegate
-
-extension CardCollectionVC: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        if collectionView.allowsMultipleSelection {
-            //編集中にセルをタップした時のキャンセル処理
-
-            if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-                do {
-                    try realmModel.removeCheckmark(for: selectedItem)
-                } catch {
-                    print("error")
-                }
-                updateData(with: realmModel.readItems())
-            }
-        } else {
-            //編集せずセルをタップした時の画面遷移処理
-            if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-                let destinationVC = CardDetailVC()
-                destinationVC.previousItem = selectedItem
-                navigationController?.pushViewController(destinationVC, animated: true)
-            }
-        }
     }
 }

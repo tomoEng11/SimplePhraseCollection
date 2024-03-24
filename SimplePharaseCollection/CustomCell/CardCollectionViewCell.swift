@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CardCollectionViewCell: UICollectionViewCell {
+final class CardCollectionViewCell: UICollectionViewCell {
 
     private let sentenceLabel = UILabel()
     private let tagLabel = CustomTagLabel(backgroundColor: .systemOrange, fontSize: 12)

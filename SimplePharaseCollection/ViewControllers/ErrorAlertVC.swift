@@ -1,18 +1,18 @@
 //
-//  AlertVC.swift
+//  ErrorAlertVC.swift
 //  SimplePharaseCollection
 //
-//  Created by 井本智博 on 2024/03/24.
+//  Created by 井本智博 on 2024/03/19.
 //
 
 import UIKit
 
-final class AlertVC: UIViewController {
+final class ErrorAlertVC: UIViewController {
 
     private let containerView = UIView()
     private let titleLabel = CustomTitleLabel(textAlignment: .center, fontSize: 20)
     private let messageLabel = CustomBodyLabel(textAlignment: .center)
-    private let actionButton = CustomButton(backgroundColor: .systemGreen, title: "OK")
+    private let actionButton = CustomButton(backgroundColor: .systemPink, title: "OK")
 
     var alertTitle: String?
     var message: String?

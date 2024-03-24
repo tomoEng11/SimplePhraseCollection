@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-class ItemData: Object {
+final class ItemData: Object {
     @objc dynamic var id: String
     @objc dynamic var sentence: String = ""
     @objc dynamic var memo: String = ""

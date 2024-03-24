@@ -9,7 +9,16 @@ import UIKit
 
 extension UIViewController {
 
-    func presentAlertOnMainThread(title: String, message: String, buttonTitle: String) {
+    func presentErrorAlert(title: String, message: String, buttonTitle: String) {
+        DispatchQueue.main.async {
+            let alertVC = ErrorAlertVC(title: title, message: message, buttonTitle: buttonTitle)
+            alertVC.modalPresentationStyle = .overFullScreen
+            alertVC.modalTransitionStyle = .crossDissolve
+            self.present(alertVC, animated: true, completion: nil)
+        }
+    }
+
+    func presentAlert(title: String, message: String, buttonTitle: String) {
         DispatchQueue.main.async {
             let alertVC = AlertVC(title: title, message: message, buttonTitle: buttonTitle)
             alertVC.modalPresentationStyle = .overFullScreen
