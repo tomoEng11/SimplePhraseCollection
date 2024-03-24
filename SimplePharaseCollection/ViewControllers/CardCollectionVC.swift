@@ -17,26 +17,24 @@ final class CardCollectionVC: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, ItemData>!
     private var isSearching: Bool = false
-    private let realm = try! Realm()
+    private let realmModel = CollectionViewRealmModel()
     private let toolBar = UIToolbar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let items = realm.objects(ItemData.self)
         configureCollectionView()
         configureDataSource()
-        updateData(on: items)
+        updateData(with: realmModel.readItems())
         configureSearchController()
         configureViewController()
         configureToolBar()
-        checkItemEmptyAndShowEmptyView(items: items)
+//        checkItemEmptyAndShowEmptyView(items: items)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let items = realm.objects(ItemData.self)
-        updateData(on: items)
-        checkItemEmptyAndShowEmptyView(items: items)
+        updateData(with: realmModel.readItems())
+//        checkItemEmptyAndShowEmptyView(items: items)
     }
 
     //MARK: - DataSource
@@ -60,7 +58,7 @@ final class CardCollectionVC: UIViewController {
 
     //MARK: - Snapshot
 
-    func updateData(on items: Results<ItemData>) {
+    func updateData(with items: Results<ItemData>) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, ItemData>()
         snapshot.appendSections([.main])
         snapshot.appendItems(Array(items))
@@ -91,16 +89,18 @@ final class CardCollectionVC: UIViewController {
         navigationItem.rightBarButtonItem = selectButton
     }
 
-    private func checkItemEmptyAndShowEmptyView(items: Results<ItemData>) {
-        if items.count == 0 {
-            let message = "New journey for getting your favorite phrases. \nAdd a card \nin New Card Screen. "
-            DispatchQueue.main.async {
-                self.showEmptyStateView(with: message, in: self.view)
-            }
-        } else {
-            return
-        }
-    }
+//    private func checkItemEmptyAndShowEmptyView(items: Results<ItemData>) {
+//        if items.count == 0 {
+//            let message = "Welcome to Phrase Collection. \nAdd your favorite phrase\nin New Card Screen. "
+//            DispatchQueue.main.async {
+//                self.showEmptyStateView(with: message, in: self.view)
+//            }
+//        } else {
+//            DispatchQueue.main.async {
+//                self.hideEmptyStateView()
+//            }
+//        }
+//    }
 
     //MARK: - Button Actions
 
@@ -124,44 +124,30 @@ final class CardCollectionVC: UIViewController {
                 action: #selector(navBarButtonPressed))
             navigationItem.rightBarButtonItem = editButton
 
-            let items = realm.objects(ItemData.self)
             do {
-                try realm.write {
-                    for item in items {
-                        if let currentItem = realm.objects(ItemData.self).filter("id == %@", item.id).first {
-                            currentItem.isChecked = false
-                        }
-                    }
-
-                }
+                try realmModel.removeAllCheckmark()
             } catch {
                 print("error")
             }
-            let newItems = realm.objects(ItemData.self)
-            updateData(on: newItems)
+            updateData(with: realmModel.readItems())
             toolBar.isHidden = true
         }
     }
 
     @objc private func deleteButtonTapped() {
-        let items = realm.objects(ItemData.self).filter("isChecked == true")
         do {
-            try realm.write {
-                for item in items {
-                    realm.delete(item)
-                }
-            }
+            try realmModel.deleteItems()
         } catch {
-            print("error")
+            print(error)
         }
-        let newItems = realm.objects(ItemData.self)
-        updateData(on: newItems)
+        updateData(with: realmModel.readItems())
         //編集モードから抜ける
         navBarButtonPressed()
         presentAlertOnMainThread(
             title: "カードが削除されました",
             message: "",
             buttonTitle: "OK")
+//        checkItemEmptyAndShowEmptyView(items: newItems)
     }
 
     //MARK: - ToolBar
@@ -221,8 +207,7 @@ final class CardCollectionVC: UIViewController {
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         isSearching = false
-        let items = realm.objects(ItemData.self)
-        updateData(on: items)
+        updateData(with: realmModel.readItems())
     }
 }
 
@@ -232,10 +217,7 @@ extension CardCollectionVC: UISearchResultsUpdating, UISearchBarDelegate {
     func updateSearchResults(for searchController: UISearchController) {
         guard let filter = searchController.searchBar.text, !filter.isEmpty else { return }
         isSearching = true
-
-        let filteredItem = realm.objects(ItemData.self).filter("sentence contains '\(filter.lowercased())' OR sentence contains '\(filter.uppercased())'")
-
-        updateData(on: filteredItem)
+        updateData(with: realmModel.readFilteredItems(filter: filter))
     }
 }
 
@@ -248,7 +230,12 @@ extension CardCollectionVC: UICollectionViewDelegate {
             //編集中にセルをタップした時のキャンセル処理
 
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-                removeCheckmarkAndUpdateData(selectedItem: selectedItem)
+                do {
+                    try realmModel.removeCheckmark(for: selectedItem)
+                } catch {
+                    print("error")
+                }
+                updateData(with: realmModel.readItems())
             }
         } else {
             //編集せずセルをタップした時の画面遷移処理
@@ -258,21 +245,5 @@ extension CardCollectionVC: UICollectionViewDelegate {
                 navigationController?.pushViewController(destinationVC, animated: true)
             }
         }
-    }
-
-    func removeCheckmarkAndUpdateData(selectedItem: ItemData) {
-        if let currentItem = realm.objects(ItemData.self).filter("id == %@", selectedItem.id).first {
-
-                do {
-                    try realm.write {
-                        currentItem.isChecked.toggle()
-                        realm.add(currentItem)
-                    }
-                } catch {
-                    print("error")
-                }
-                let items = realm.objects(ItemData.self)
-                updateData(on: items)
-            }
     }
 }

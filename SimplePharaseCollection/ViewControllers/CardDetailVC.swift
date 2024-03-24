@@ -19,7 +19,7 @@ final class CardDetailVC: UIViewController {
     private let scrollView = UIScrollView()
     private let scrollContentView = UIView()
     private let cardView = UIView()
-    let realm = try! Realm()
+    private let realmModel = CardDetailVCRealmModel()
     var previousItem: ItemData?
     let toolBar = UIToolbar()
 
@@ -38,7 +38,6 @@ final class CardDetailVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        guard previousItem != nil else { return }
         tagTextView.text = previousItem?.tag
         sentenceTextView.text = previousItem?.sentence
         memoTextView.text = previousItem?.memo
@@ -122,8 +121,8 @@ final class CardDetailVC: UIViewController {
         NSLayoutConstraint.activate([
             tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
             tagTextView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
-            tagTextView.heightAnchor.constraint(equalToConstant: 24),
-            tagTextView.widthAnchor.constraint(equalToConstant: 100)
+            tagTextView.heightAnchor.constraint(equalToConstant: 32),
+            tagTextView.widthAnchor.constraint(equalToConstant: 110)
         ])
     }
 
@@ -157,31 +156,44 @@ final class CardDetailVC: UIViewController {
             memoTextView.topAnchor.constraint(equalTo: sentenceTextView.bottomAnchor, constant: 24),
             memoTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             memoTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-
+            memoTextView.heightAnchor.constraint(equalTo: sentenceTextView.heightAnchor)
         ])
     }
+}
 
-    //MARK: - Configure ViewController
+extension CardDetailVC: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView == sentenceTextView {
+            print("sentenceTextView")
+            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        }
+    }
+}
 
+extension CardDetailVC {
+
+    //MARK: - ViewController Setting
     private func configureViewController() {
         view.backgroundColor = .systemBackground
 
-        let naviEditButton = UIBarButtonItem(
+        //MARK: - NavButtons Setting
+
+        let navEditButton = UIBarButtonItem(
             title: "Edit",
             style: .plain,
             target: self ,
-            action: #selector(naviEditButtonPressed))
-        navigationItem.rightBarButtonItem = naviEditButton
-        
+            action: #selector(navEditButtonPressed))
+        navigationItem.rightBarButtonItem = navEditButton
+
         let tapGesture = UITapGestureRecognizer(
             target: self,
             action: #selector(dismissKeyboard(with:)))
         view.addGestureRecognizer(tapGesture)
 
-        let tapGestureForNavi = UITapGestureRecognizer(
+        let tapGestureForNav = UITapGestureRecognizer(
             target: self,
             action: #selector(navBarTapped))
-        navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
+        navigationController?.navigationBar.addGestureRecognizer(tapGestureForNav)
     }
 
     //MARK: - Button Actions
@@ -190,7 +202,7 @@ final class CardDetailVC: UIViewController {
         view.endEditing(true)
     }
 
-    @objc private func naviEditButtonPressed() {
+    @objc private func navEditButtonPressed() {
         switchEdittingMode()
 
         if sentenceTextView.isEditable {
@@ -199,7 +211,7 @@ final class CardDetailVC: UIViewController {
                 title: "Cancel",
                 style: .plain,
                 target: self ,
-                action: #selector(naviEditButtonPressed))
+                action: #selector(navEditButtonPressed))
             navigationItem.rightBarButtonItem = cancelButton
         } else {
             //編集ボタンの生成
@@ -207,7 +219,7 @@ final class CardDetailVC: UIViewController {
                 title: "Edit",
                 style: .plain,
                 target: self ,
-                action: #selector(naviEditButtonPressed))
+                action: #selector(navEditButtonPressed))
             navigationItem.rightBarButtonItem = editButton
         }
     }
@@ -255,54 +267,41 @@ final class CardDetailVC: UIViewController {
         sentenceTextView.isEditable.toggle()
         tagTextView.isEditable.toggle()
 
-        if let newItem = realm.objects(ItemData.self).filter("id == %@", previousItem?.id).first {
-            do {
-                try realm.write {
-                    newItem.sentence = sentenceTextView.text
-                    newItem.memo = memoTextView.text
-                    newItem.tag = tagTextView.text
-                    realm.add(newItem)
-                    presentAlertOnMainThread(
-                        title: "カードが保存されました",
-                        message: "",
-                        buttonTitle: "OK")
-                }
-            } catch {
-                print("error")
-            }
-        }
+        guard previousItem != nil else { return }
 
+        do {
+            try realmModel.saveItem(
+                previousItem: previousItem!,
+                sentence: sentenceTextView.text,
+                memo: memoTextView.text,
+                tag: tagTextView.text)
+
+        } catch {
+            print("error")
+        }
+        presentAlertOnMainThread(
+            title: "カードが保存されました。",
+            message: "",
+            buttonTitle: "OK")
         self.navigationController?.popViewController(animated: true)
     }
 
     @objc private func deleteButtonTapped() {
-
-        if let currentItem = realm.objects(ItemData.self).filter("id == %@", previousItem?.id).first {
-            do {
-                try realm.write {
-                    realm.delete(currentItem)
-                    presentAlertOnMainThread(
-                        title: "カードが削除されました",
-                        message: "",
-                        buttonTitle: "OK")
-                }
-            } catch {
-                print("deleteできませんでした")
-            }
-            self.navigationController?.popViewController(animated: true)
+        guard previousItem != nil else { return }
+        do {
+            try realmModel.deleteItem(previousItem: previousItem!)
+            presentAlertOnMainThread(
+                title: "カードが削除されました",
+                message: "",
+                buttonTitle: "OK")
+        } catch {
+            print("deleteできませんでした")
         }
+        self.navigationController?.popViewController(animated: true)
     }
-    
+
     @objc private func navBarTapped() {
         view.endEditing(true)
     }
-}
 
-extension CardDetailVC: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView == sentenceTextView {
-            print("sentenceTextView")
-            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
-        }
-    }
 }

@@ -19,7 +19,7 @@ final class NewCardVC: UIViewController {
     private let scrollView = UIScrollView()
     private let scrollContentView = UIView()
     private let cardView = UIView()
-    private let realm = try! Realm()
+    private let realmModel = NewCardVCRealmModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,11 +95,13 @@ final class NewCardVC: UIViewController {
         stackView.layer.masksToBounds = true
         stackView.layer.cornerRadius = 20
 
+        let padding: CGFloat = 24
+
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: tagTextView.bottomAnchor, constant: 24),
-            stackView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -24),
-            stackView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -24)
+            stackView.topAnchor.constraint(equalTo: tagTextView.bottomAnchor, constant: padding),
+            stackView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: padding),
+            stackView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -padding),
+            stackView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -padding)
         ])
     }
 
@@ -113,8 +115,8 @@ final class NewCardVC: UIViewController {
         NSLayoutConstraint.activate([
             tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
             tagTextView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
-            tagTextView.heightAnchor.constraint(equalToConstant: 24),
-            tagTextView.widthAnchor.constraint(equalToConstant: 100)
+            tagTextView.heightAnchor.constraint(equalToConstant: 32),
+            tagTextView.widthAnchor.constraint(equalToConstant: 110)
         ])
     }
 
@@ -149,9 +151,19 @@ final class NewCardVC: UIViewController {
             memoTextView.heightAnchor.constraint(equalTo: sentenceTextView.heightAnchor)
         ])
     }
+}
 
-    //MARK: - ConfigureViewController
+//MARK: - UITextView Delegate
+extension NewCardVC: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView == sentenceTextView {
+            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        }
+    }
+}
 
+//MARK: - ViewController Setting
+extension NewCardVC {
     private func configureViewController() {
         view.backgroundColor = .systemBackground
         self.title = "New Card"
@@ -161,13 +173,13 @@ final class NewCardVC: UIViewController {
             style: .plain,
             target: self,
             action: #selector(addButtonPressed))
-        
+
         navigationItem.rightBarButtonItem = addButton
 
         let tapGestureForNavi = UITapGestureRecognizer(
             target: self,
             action: #selector(navBarTapped))
-               
+
         navigationController?.navigationBar.addGestureRecognizer(tapGestureForNavi)
     }
 
@@ -176,32 +188,19 @@ final class NewCardVC: UIViewController {
     @objc private func addButtonPressed() {
         guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
             presentAlertOnMainThread(
-                title: "Type something.",
-                message: "",
+                title: "フレーズセクションが空です。",
+                message: "フレーズセクションにフレーズを入力してください。",
                 buttonTitle: "OK")
             return
         }
-        addNewItem()
-        resetCardView()
-    }
-
-    private func addNewItem() {
-        let newItem = ItemData()
-        newItem.sentence = sentenceTextView.text
-        newItem.memo = memoTextView.text
-        newItem.tag = tagTextView.text
 
         do {
-            try realm.write {
-                realm.add(newItem)
-                presentAlertOnMainThread(
-                    title: "カードが追加されました",
-                    message: "",
-                    buttonTitle: "OK")
-            }
+            try realmModel.createData(sentence: sentenceTextView.text, memo: memoTextView.text, tag: tagTextView.text)
+            presentAlertOnMainThread(title: "カードが追加されました。", message: "", buttonTitle: "OK")
         } catch {
-            print("error")
+            print(error)
         }
+        resetCardView()
     }
 
     private func resetCardView() {
@@ -225,13 +224,5 @@ final class NewCardVC: UIViewController {
 
     @objc private func navBarTapped() {
         view.endEditing(true)
-    }
-}
-
-extension NewCardVC: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView == sentenceTextView {
-            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
-        }
     }
 }

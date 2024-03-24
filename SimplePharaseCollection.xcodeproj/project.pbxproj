@@ -12,6 +12,9 @@
 		BB277A0F2BAB26640018F12B /* CustomTagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB277A0E2BAB26640018F12B /* CustomTagLabel.swift */; };
 		BB3035422BAFD3C70094D018 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035412BAFD3C70094D018 /* EmptyStateView.swift */; };
 		BB3035452BAFDB0C0094D018 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035442BAFDB0C0094D018 /* Constant.swift */; };
+		BB3035482BB003520094D018 /* NewCardVCRealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035472BB003520094D018 /* NewCardVCRealmModel.swift */; };
+		BB30354A2BB008F80094D018 /* CollectionViewRealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035492BB008F80094D018 /* CollectionViewRealmModel.swift */; };
+		BB30354C2BB013BA0094D018 /* CardDetailVCRealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB30354B2BB013BA0094D018 /* CardDetailVCRealmModel.swift */; };
 		BB90FABD2BA9CE84009B85ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FABC2BA9CE84009B85ED /* AppDelegate.swift */; };
 		BB90FABF2BA9CE84009B85ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FABE2BA9CE84009B85ED /* SceneDelegate.swift */; };
 		BB90FAC62BA9CE85009B85ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB90FAC52BA9CE85009B85ED /* Assets.xcassets */; };
@@ -38,6 +41,9 @@
 		BB277A0E2BAB26640018F12B /* CustomTagLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTagLabel.swift; sourceTree = "<group>"; };
 		BB3035412BAFD3C70094D018 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		BB3035442BAFDB0C0094D018 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		BB3035472BB003520094D018 /* NewCardVCRealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCardVCRealmModel.swift; sourceTree = "<group>"; };
+		BB3035492BB008F80094D018 /* CollectionViewRealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewRealmModel.swift; sourceTree = "<group>"; };
+		BB30354B2BB013BA0094D018 /* CardDetailVCRealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailVCRealmModel.swift; sourceTree = "<group>"; };
 		BB90FAB92BA9CE84009B85ED /* SimplePharaseCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimplePharaseCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB90FABC2BA9CE84009B85ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB90FABE2BA9CE84009B85ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +92,16 @@
 			path = CustomView;
 			sourceTree = "<group>";
 		};
+		BB3035462BB003320094D018 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BB3035472BB003520094D018 /* NewCardVCRealmModel.swift */,
+				BB30354B2BB013BA0094D018 /* CardDetailVCRealmModel.swift */,
+				BB3035492BB008F80094D018 /* CollectionViewRealmModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		BB90FAB02BA9CE84009B85ED = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +123,7 @@
 		BB90FABB2BA9CE84009B85ED /* SimplePharaseCollection */ = {
 			isa = PBXGroup;
 			children = (
+				BB3035462BB003320094D018 /* Model */,
 				BB90FAF12BA9F37D009B85ED /* Support */,
 				BB90FAD22BA9D12A009B85ED /* TabBarController */,
 				BB90FAD52BA9D1A3009B85ED /* ViewControllers */,
@@ -328,6 +345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB30354C2BB013BA0094D018 /* CardDetailVCRealmModel.swift in Sources */,
 				BB90FAE72BA9D3BC009B85ED /* UIViewController+Extension.swift in Sources */,
 				BB90FAD72BA9D1D3009B85ED /* CardDetailVC.swift in Sources */,
 				BB90FABD2BA9CE84009B85ED /* AppDelegate.swift in Sources */,
@@ -341,10 +359,12 @@
 				BB90FAF02BA9D544009B85ED /* UIHelper.swift in Sources */,
 				BB3035452BAFDB0C0094D018 /* Constant.swift in Sources */,
 				BB90FAEA2BA9D41B009B85ED /* CardCollectionViewCell.swift in Sources */,
+				BB3035482BB003520094D018 /* NewCardVCRealmModel.swift in Sources */,
 				BB90FAE52BA9D359009B85ED /* CustomBodyLabel.swift in Sources */,
 				BB90FADD2BA9D287009B85ED /* ItemData.swift in Sources */,
 				BB90FAD12BA9D123009B85ED /* MainTabBarControllerViewController.swift in Sources */,
 				BB90FADB2BA9D23A009B85ED /* AlertVC.swift in Sources */,
+				BB30354A2BB008F80094D018 /* CollectionViewRealmModel.swift in Sources */,
 				BB277A0D2BAB12030018F12B /* CustomLabelTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

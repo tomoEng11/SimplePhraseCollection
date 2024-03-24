@@ -21,7 +21,14 @@ extension UIViewController {
     func showEmptyStateView(with message: String, in view: UIView) {
         let emptyStateView = EmptyStateView(message: message)
         emptyStateView.frame = view.bounds
+        emptyStateView.tag = 0
         view.addSubview(emptyStateView)
+    }
+
+    func hideEmptyStateView() {
+        if let emptyStateView = view.viewWithTag(0) {
+            emptyStateView.removeFromSuperview()
+        }
     }
 }
 
