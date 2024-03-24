@@ -10,12 +10,14 @@
 		492DD853561B5B9AC3F9063F /* Pods_SimplePharaseCollection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B75D782AD159AC2FFD5052AD /* Pods_SimplePharaseCollection.framework */; };
 		BB277A0D2BAB12030018F12B /* CustomLabelTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB277A0C2BAB12030018F12B /* CustomLabelTextView.swift */; };
 		BB277A0F2BAB26640018F12B /* CustomTagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB277A0E2BAB26640018F12B /* CustomTagLabel.swift */; };
+		BB3035422BAFD3C70094D018 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035412BAFD3C70094D018 /* EmptyStateView.swift */; };
+		BB3035452BAFDB0C0094D018 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035442BAFDB0C0094D018 /* Constant.swift */; };
 		BB90FABD2BA9CE84009B85ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FABC2BA9CE84009B85ED /* AppDelegate.swift */; };
 		BB90FABF2BA9CE84009B85ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FABE2BA9CE84009B85ED /* SceneDelegate.swift */; };
 		BB90FAC62BA9CE85009B85ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB90FAC52BA9CE85009B85ED /* Assets.xcassets */; };
 		BB90FAC92BA9CE85009B85ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB90FAC72BA9CE85009B85ED /* LaunchScreen.storyboard */; };
 		BB90FAD12BA9D123009B85ED /* MainTabBarControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAD02BA9D123009B85ED /* MainTabBarControllerViewController.swift */; };
-		BB90FAD42BA9D17B009B85ED /* CardEdittingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAD32BA9D17B009B85ED /* CardEdittingVC.swift */; };
+		BB90FAD42BA9D17B009B85ED /* NewCardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAD32BA9D17B009B85ED /* NewCardVC.swift */; };
 		BB90FAD72BA9D1D3009B85ED /* CardDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAD62BA9D1D3009B85ED /* CardDetailVC.swift */; };
 		BB90FAD92BA9D203009B85ED /* CardCollectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FAD82BA9D203009B85ED /* CardCollectionVC.swift */; };
 		BB90FADB2BA9D23A009B85ED /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FADA2BA9D23A009B85ED /* AlertVC.swift */; };
@@ -34,6 +36,8 @@
 		B75D782AD159AC2FFD5052AD /* Pods_SimplePharaseCollection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SimplePharaseCollection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB277A0C2BAB12030018F12B /* CustomLabelTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabelTextView.swift; sourceTree = "<group>"; };
 		BB277A0E2BAB26640018F12B /* CustomTagLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTagLabel.swift; sourceTree = "<group>"; };
+		BB3035412BAFD3C70094D018 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		BB3035442BAFDB0C0094D018 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		BB90FAB92BA9CE84009B85ED /* SimplePharaseCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimplePharaseCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB90FABC2BA9CE84009B85ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB90FABE2BA9CE84009B85ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,7 +45,7 @@
 		BB90FAC82BA9CE85009B85ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB90FACA2BA9CE85009B85ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB90FAD02BA9D123009B85ED /* MainTabBarControllerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarControllerViewController.swift; sourceTree = "<group>"; };
-		BB90FAD32BA9D17B009B85ED /* CardEdittingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardEdittingVC.swift; sourceTree = "<group>"; };
+		BB90FAD32BA9D17B009B85ED /* NewCardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCardVC.swift; sourceTree = "<group>"; };
 		BB90FAD62BA9D1D3009B85ED /* CardDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailVC.swift; sourceTree = "<group>"; };
 		BB90FAD82BA9D203009B85ED /* CardCollectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionVC.swift; sourceTree = "<group>"; };
 		BB90FADA2BA9D23A009B85ED /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
@@ -74,6 +78,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BB3035432BAFDAB40094D018 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				BB3035412BAFD3C70094D018 /* EmptyStateView.swift */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
 		BB90FAB02BA9CE84009B85ED = {
 			isa = PBXGroup;
 			children = (
@@ -98,12 +110,13 @@
 				BB90FAF12BA9F37D009B85ED /* Support */,
 				BB90FAD22BA9D12A009B85ED /* TabBarController */,
 				BB90FAD52BA9D1A3009B85ED /* ViewControllers */,
+				BB3035432BAFDAB40094D018 /* CustomView */,
 				BB90FAEE2BA9D49A009B85ED /* CustomButton */,
 				BB90FAEB2BA9D44F009B85ED /* CustomCell */,
 				BB90FAE12BA9D304009B85ED /* CustomLabel */,
 				BB90FADE2BA9D2A7009B85ED /* DataModel */,
 				BB90FAE82BA9D3CC009B85ED /* Extensions */,
-				BB90FAF22BA9F44A009B85ED /* UIHelper */,
+				BB90FAF22BA9F44A009B85ED /* Utilities */,
 			);
 			path = SimplePharaseCollection;
 			sourceTree = "<group>";
@@ -119,7 +132,7 @@
 		BB90FAD52BA9D1A3009B85ED /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				BB90FAD32BA9D17B009B85ED /* CardEdittingVC.swift */,
+				BB90FAD32BA9D17B009B85ED /* NewCardVC.swift */,
 				BB90FAD62BA9D1D3009B85ED /* CardDetailVC.swift */,
 				BB90FAD82BA9D203009B85ED /* CardCollectionVC.swift */,
 				BB90FADA2BA9D23A009B85ED /* AlertVC.swift */,
@@ -182,12 +195,13 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
-		BB90FAF22BA9F44A009B85ED /* UIHelper */ = {
+		BB90FAF22BA9F44A009B85ED /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				BB90FAEF2BA9D544009B85ED /* UIHelper.swift */,
+				BB3035442BAFDB0C0094D018 /* Constant.swift */,
 			);
-			path = UIHelper;
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		C9733D9959FF2BE123E18414 /* Pods */ = {
@@ -319,11 +333,13 @@
 				BB90FABD2BA9CE84009B85ED /* AppDelegate.swift in Sources */,
 				BB90FABF2BA9CE84009B85ED /* SceneDelegate.swift in Sources */,
 				BB90FAED2BA9D478009B85ED /* CustomButton.swift in Sources */,
-				BB90FAD42BA9D17B009B85ED /* CardEdittingVC.swift in Sources */,
+				BB3035422BAFD3C70094D018 /* EmptyStateView.swift in Sources */,
+				BB90FAD42BA9D17B009B85ED /* NewCardVC.swift in Sources */,
 				BB277A0F2BAB26640018F12B /* CustomTagLabel.swift in Sources */,
 				BB90FAE32BA9D32F009B85ED /* CustomTitleLabel.swift in Sources */,
 				BB90FAD92BA9D203009B85ED /* CardCollectionVC.swift in Sources */,
 				BB90FAF02BA9D544009B85ED /* UIHelper.swift in Sources */,
+				BB3035452BAFDB0C0094D018 /* Constant.swift in Sources */,
 				BB90FAEA2BA9D41B009B85ED /* CardCollectionViewCell.swift in Sources */,
 				BB90FAE52BA9D359009B85ED /* CustomBodyLabel.swift in Sources */,
 				BB90FADD2BA9D287009B85ED /* ItemData.swift in Sources */,
@@ -399,7 +415,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -456,7 +472,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -482,6 +498,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -511,6 +528,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
