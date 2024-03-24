@@ -71,7 +71,7 @@ class CardCollectionViewCell: UICollectionViewCell {
 
     private func configureCheckmarkImageView() {
         checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
-        checkmarkImageView.image = UIImage(systemName: "checkmark") // チェックマークの画像
+        checkmarkImageView.image = UIImage(systemName: "checkmark")
         checkmarkImageView.isHidden = true
 
         contentView.addSubview(checkmarkImageView)
@@ -79,10 +79,6 @@ class CardCollectionViewCell: UICollectionViewCell {
             checkmarkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             checkmarkImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
         ])
-    }
-
-    func reverseIsSelected(item: ItemData) {
-        checkmarkImageView.isHidden = !item.isChecked
     }
 }
 

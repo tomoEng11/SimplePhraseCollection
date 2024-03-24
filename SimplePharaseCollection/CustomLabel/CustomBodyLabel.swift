@@ -32,10 +32,3 @@ final class CustomBodyLabel: UILabel {
         translatesAutoresizingMaskIntoConstraints = false
     }
 }
-
-#Preview {
-    let view = CustomBodyLabel(textAlignment: .left)
-    view.text = "スピードもパワーもテクニックもない俺が\nブルーロックにいられるのは...\n俺のゴールの最後のピースは、俺のいる未来に誰にも追いつく時間を与えないダイレクトシュートだ！！！"
-    view.numberOfLines = 10
-    return view
-}

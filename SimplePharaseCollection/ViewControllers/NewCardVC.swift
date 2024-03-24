@@ -8,9 +8,11 @@
 import UIKit
 import RealmSwift
 
-final class CardEdittingVC: UIViewController {
+final class NewCardVC: UIViewController {
 
-    private let tagTextView = CustomLabelTextView(fontSize: 12, backgroundColor: .systemOrange)
+    private let tagTextView = CustomLabelTextView(
+        fontSize: 12,
+        backgroundColor: .systemOrange)
     private let sentenceTextView = UITextView()
     private let memoTextView = UITextView()
     private let stackView = UIStackView()
@@ -105,7 +107,7 @@ final class CardEdittingVC: UIViewController {
 
     private func configureTagTextView() {
         cardView.addSubview(tagTextView)
-        tagTextView.text = "Sample Title"
+        tagTextView.text = "Phrase"
         tagTextView.isEditable = true
 
         NSLayoutConstraint.activate([
@@ -123,6 +125,7 @@ final class CardEdittingVC: UIViewController {
         sentenceTextView.textAlignment = .left
         sentenceTextView.translatesAutoresizingMaskIntoConstraints = false
         sentenceTextView.backgroundColor = .secondarySystemBackground
+        sentenceTextView.delegate = self
 
         NSLayoutConstraint.activate([
             sentenceTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
@@ -171,7 +174,6 @@ final class CardEdittingVC: UIViewController {
     //MARK: - Button Actions
 
     @objc private func addButtonPressed() {
-
         guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
             presentAlertOnMainThread(
                 title: "Type something.",
@@ -226,7 +228,10 @@ final class CardEdittingVC: UIViewController {
     }
 }
 
-//#Preview {
-//    let vc = CardEdittingVC()
-//    return vc
-//}
+extension NewCardVC: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView == sentenceTextView {
+            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        }
+    }
+}

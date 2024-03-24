@@ -18,16 +18,10 @@ extension UIViewController {
         }
     }
 
-    func colorWithGradient(size: CGSize, colors: [UIColor]) -> UIColor {
-
-        let backgroundGradientLayer = CAGradientLayer()
-        backgroundGradientLayer.frame = CGRect(origin: .zero, size: size)
-        backgroundGradientLayer.colors = colors.map { $0.cgColor }
-        UIGraphicsBeginImageContext(size)
-        backgroundGradientLayer.render(in: UIGraphicsGetCurrentContext()!)
-        let backgroundColorImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return UIColor(patternImage: backgroundColorImage!)
+    func showEmptyStateView(with message: String, in view: UIView) {
+        let emptyStateView = EmptyStateView(message: message)
+        emptyStateView.frame = view.bounds
+        view.addSubview(emptyStateView)
     }
 }
 

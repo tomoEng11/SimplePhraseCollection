@@ -21,7 +21,6 @@ final class CardCollectionVC: UIViewController {
     private let toolBar = UIToolbar()
 
     override func viewDidLoad() {
-
         super.viewDidLoad()
         let items = realm.objects(ItemData.self)
         configureCollectionView()
@@ -30,13 +29,14 @@ final class CardCollectionVC: UIViewController {
         configureSearchController()
         configureViewController()
         configureToolBar()
+        checkItemEmptyAndShowEmptyView(items: items)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let items = realm.objects(ItemData.self)
         updateData(on: items)
-        print("viewWillAppear")
+        checkItemEmptyAndShowEmptyView(items: items)
     }
 
     //MARK: - DataSource
@@ -46,7 +46,9 @@ final class CardCollectionVC: UIViewController {
             collectionView: collectionView,
             cellProvider: { (collectionView, indexPath, item) -> UICollectionViewCell? in
 
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CardCollectionViewCell.reuseID, for: indexPath) as! CardCollectionViewCell
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: CardCollectionViewCell.reuseID,
+                    for: indexPath) as! CardCollectionViewCell
 
                 DispatchQueue.main.async {
                     cell.set(with: item)
@@ -85,29 +87,41 @@ final class CardCollectionVC: UIViewController {
         let selectButton = UIBarButtonItem(
             barButtonSystemItem: .edit,
             target: self,
-            action: #selector(editButtonPressed))
+            action: #selector(navBarButtonPressed))
         navigationItem.rightBarButtonItem = selectButton
+    }
+
+    private func checkItemEmptyAndShowEmptyView(items: Results<ItemData>) {
+        if items.count == 0 {
+            let message = "New journey for getting your favorite phrases. \nAdd a card \nin New Card Screen. "
+            DispatchQueue.main.async {
+                self.showEmptyStateView(with: message, in: self.view)
+            }
+        } else {
+            return
+        }
     }
 
     //MARK: - Button Actions
 
-    @objc private func editButtonPressed() {
+    @objc private func navBarButtonPressed() {
         collectionView.allowsMultipleSelection.toggle()
 
         if collectionView.allowsMultipleSelection {
+            //編集ボタンを押した時の処理
             toolBar.isHidden = false
             let cancelButton = UIBarButtonItem(
                 barButtonSystemItem: .cancel,
                 target: self,
-                action: #selector(editButtonPressed))
+                action: #selector(navBarButtonPressed))
             navigationItem.rightBarButtonItem = cancelButton
-            print("編集ボタンが押されました")
 
         } else {
+            //キャンセルボタンを押した時の処理
             let editButton = UIBarButtonItem(
                 barButtonSystemItem: .edit,
                 target: self, 
-                action: #selector(editButtonPressed))
+                action: #selector(navBarButtonPressed))
             navigationItem.rightBarButtonItem = editButton
 
             let items = realm.objects(ItemData.self)
@@ -123,7 +137,6 @@ final class CardCollectionVC: UIViewController {
             } catch {
                 print("error")
             }
-            print("キャンセルボタンが押されました")
             let newItems = realm.objects(ItemData.self)
             updateData(on: newItems)
             toolBar.isHidden = true
@@ -131,7 +144,6 @@ final class CardCollectionVC: UIViewController {
     }
 
     @objc private func deleteButtonTapped() {
-        print("delete tapped")
         let items = realm.objects(ItemData.self).filter("isChecked == true")
         do {
             try realm.write {
@@ -145,8 +157,11 @@ final class CardCollectionVC: UIViewController {
         let newItems = realm.objects(ItemData.self)
         updateData(on: newItems)
         //編集モードから抜ける
-        editButtonPressed()
-        presentAlertOnMainThread(title: "カードが削除されました", message: "", buttonTitle: "OK")
+        navBarButtonPressed()
+        presentAlertOnMainThread(
+            title: "カードが削除されました",
+            message: "",
+            buttonTitle: "OK")
     }
 
     //MARK: - ToolBar
@@ -179,7 +194,7 @@ final class CardCollectionVC: UIViewController {
             title: "Cancel",
             style: .plain,
             target: self,
-            action: #selector(editButtonPressed))
+            action: #selector(navBarButtonPressed))
 
         toolBar.items = [ spacer, deleteButton, spacer, cancelButton, spacer]
         
@@ -230,15 +245,14 @@ extension CardCollectionVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         if collectionView.allowsMultipleSelection {
-            //編集中にセルをタップした時
+            //編集中にセルをタップした時のキャンセル処理
 
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
                 removeCheckmarkAndUpdateData(selectedItem: selectedItem)
             }
         } else {
-            //編集せずセルをタップした時
+            //編集せずセルをタップした時の画面遷移処理
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-
                 let destinationVC = CardDetailVC()
                 destinationVC.previousItem = selectedItem
                 navigationController?.pushViewController(destinationVC, animated: true)
@@ -262,8 +276,3 @@ extension CardCollectionVC: UICollectionViewDelegate {
             }
     }
 }
-//
-//#Preview {
-//    let vc = CardCollectionVC()
-//    return vc
-//}

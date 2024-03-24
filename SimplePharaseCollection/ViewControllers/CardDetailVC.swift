@@ -10,7 +10,9 @@ import RealmSwift
 
 final class CardDetailVC: UIViewController {
 
-    let tagTextView = CustomLabelTextView(fontSize: 12, backgroundColor: .systemOrange)
+    let tagTextView = CustomLabelTextView(
+        fontSize: 12,
+        backgroundColor: .systemOrange)
     let sentenceTextView = UITextView()
     let memoTextView = UITextView()
     private let stackView = UIStackView()
@@ -133,6 +135,7 @@ final class CardDetailVC: UIViewController {
         sentenceTextView.textAlignment = .left
         sentenceTextView.translatesAutoresizingMaskIntoConstraints = false
         sentenceTextView.backgroundColor = .secondarySystemBackground
+        sentenceTextView.delegate = self
 
         NSLayoutConstraint.activate([
             sentenceTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
@@ -154,7 +157,7 @@ final class CardDetailVC: UIViewController {
             memoTextView.topAnchor.constraint(equalTo: sentenceTextView.bottomAnchor, constant: 24),
             memoTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             memoTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            memoTextView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 24)
+
         ])
     }
 
@@ -252,8 +255,6 @@ final class CardDetailVC: UIViewController {
         sentenceTextView.isEditable.toggle()
         tagTextView.isEditable.toggle()
 
-        //            guard previousItem != nil else { return }
-
         if let newItem = realm.objects(ItemData.self).filter("id == %@", previousItem?.id).first {
             do {
                 try realm.write {
@@ -275,13 +276,15 @@ final class CardDetailVC: UIViewController {
     }
 
     @objc private func deleteButtonTapped() {
-        print("delete tapped")
 
         if let currentItem = realm.objects(ItemData.self).filter("id == %@", previousItem?.id).first {
             do {
                 try realm.write {
                     realm.delete(currentItem)
-                    presentAlertOnMainThread(title: "カードが削除されました", message: "", buttonTitle: "OK")
+                    presentAlertOnMainThread(
+                        title: "カードが削除されました",
+                        message: "",
+                        buttonTitle: "OK")
                 }
             } catch {
                 print("deleteできませんでした")
@@ -295,8 +298,11 @@ final class CardDetailVC: UIViewController {
     }
 }
 
-
-//#Preview {
-//    let vc = CardDetailVC()
-//    return vc
-//}
+extension CardDetailVC: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView == sentenceTextView {
+            print("sentenceTextView")
+            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        }
+    }
+}
