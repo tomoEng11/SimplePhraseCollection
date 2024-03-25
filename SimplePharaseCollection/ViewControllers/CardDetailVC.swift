@@ -116,7 +116,7 @@ final class CardDetailVC: UIViewController {
     private func configureTagTextView() {
         cardView.addSubview(tagTextView)
         tagTextView.text = "Phrase"
-        tagTextView.isEditable = true
+        tagTextView.isEditable = false
 
         NSLayoutConstraint.activate([
             tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
@@ -134,6 +134,7 @@ final class CardDetailVC: UIViewController {
         sentenceTextView.translatesAutoresizingMaskIntoConstraints = false
         sentenceTextView.backgroundColor = .secondarySystemBackground
         sentenceTextView.delegate = self
+        sentenceTextView.isEditable = false
 
         NSLayoutConstraint.activate([
             sentenceTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
@@ -149,6 +150,7 @@ final class CardDetailVC: UIViewController {
         memoTextView.textAlignment = .left
         memoTextView.translatesAutoresizingMaskIntoConstraints = false
         memoTextView.backgroundColor = .secondarySystemBackground
+        memoTextView.isEditable = false
 
         NSLayoutConstraint.activate([
             memoTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
@@ -202,9 +204,11 @@ extension CardDetailVC {
         if sentenceTextView.isEditable {
             //編集中に表示するキャンセルボタンの生成
             generateCancelButtonOnEdittingMode()
+            print("編集中")
         } else {
             //編集ボタンの生成
             generateEditButtonOnViewingMode()
+            print("編集終了")
         }
     }
 
@@ -247,11 +251,13 @@ extension CardDetailVC {
             barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace,
             target: self,
             action: nil)
+
         let deleteButton = UIBarButtonItem(
             title: "delete",
             style: .plain,
             target: self,
             action: #selector(deleteButtonTapped))
+
         let saveButton = UIBarButtonItem(
             title: "Save",
             style: .plain,
