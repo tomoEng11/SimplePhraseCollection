@@ -28,13 +28,12 @@ final class CardCollectionVC: UIViewController {
         configureSearchController()
         configureViewController()
         configureToolBar()
-//        checkItemEmptyAndShowEmptyView(items: items)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateData(with: realmModel.readItems())
-//        checkItemEmptyAndShowEmptyView(items: items)
+        checkItemEmptyAndShowEmptyView(numberOfItems: realmModel.itemCount())
     }
 
     //MARK: - DataSource
@@ -113,6 +112,7 @@ extension CardCollectionVC: UICollectionViewDelegate {
             //編集中にセルをタップした時のキャンセル処理
 
             if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
+                
                 do {
                     try realmModel.removeCheckmark(for: selectedItem)
                 } catch {
@@ -147,18 +147,20 @@ extension CardCollectionVC {
         navigationItem.rightBarButtonItem = selectButton
     }
 
-//    private func checkItemEmptyAndShowEmptyView(items: Results<ItemData>) {
-//        if items.count == 0 {
-//            let message = "Welcome to Phrase Collection. \nAdd your favorite phrase\nin New Card Screen. "
-//            DispatchQueue.main.async {
-//                self.showEmptyStateView(with: message, in: self.view)
-//            }
-//        } else {
-//            DispatchQueue.main.async {
-//                self.hideEmptyStateView()
-//            }
-//        }
-//    }
+    private func checkItemEmptyAndShowEmptyView(numberOfItems: Int) {
+        if numberOfItems == 0 {
+            let message = "Welcome to Phrase Collection. \nAdd your favorite phrase\nin New Card Screen. "
+            DispatchQueue.main.async {
+                self.showEmptyStateView(with: message, in: self.view)
+                print("n=0")
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.hideEmptyStateView()
+                print("\(numberOfItems)")
+            }
+        }
+    }
 
     //MARK: - NavButton Actions
 
@@ -168,19 +170,10 @@ extension CardCollectionVC {
         if collectionView.allowsMultipleSelection {
             //編集ボタンを押した時の処理
             toolBar.isHidden = false
-            let cancelButton = UIBarButtonItem(
-                barButtonSystemItem: .cancel,
-                target: self,
-                action: #selector(navBarButtonPressed))
-            navigationItem.rightBarButtonItem = cancelButton
-
+            generateCancelButtonOnEdittingMode()
         } else {
             //キャンセルボタンを押した時の処理
-            let editButton = UIBarButtonItem(
-                barButtonSystemItem: .edit,
-                target: self,
-                action: #selector(navBarButtonPressed))
-            navigationItem.rightBarButtonItem = editButton
+            generateEditButtonOnViewingMode()
 
             do {
                 try realmModel.removeAllCheckmark()
@@ -193,6 +186,24 @@ extension CardCollectionVC {
             updateData(with: realmModel.readItems())
             toolBar.isHidden = true
         }
+    }
+
+    private func generateCancelButtonOnEdittingMode() {
+        let cancelButton = UIBarButtonItem(
+            title: "Cancel",
+            style: .plain,
+            target: self ,
+            action: #selector(navBarButtonPressed))
+        navigationItem.rightBarButtonItem = cancelButton
+    }
+
+    private func generateEditButtonOnViewingMode() {
+        let editButton = UIBarButtonItem(
+            title: "Edit",
+            style: .plain,
+            target: self ,
+            action: #selector(navBarButtonPressed))
+        navigationItem.rightBarButtonItem = editButton
     }
 
     @objc private func deleteButtonTapped() {
@@ -211,7 +222,7 @@ extension CardCollectionVC {
         updateData(with: realmModel.readItems())
         //編集モードから抜ける
         navBarButtonPressed()
-//        checkItemEmptyAndShowEmptyView(items: newItems)
+        checkItemEmptyAndShowEmptyView(numberOfItems: realmModel.itemCount())
     }
 
     //MARK: - ToolBar

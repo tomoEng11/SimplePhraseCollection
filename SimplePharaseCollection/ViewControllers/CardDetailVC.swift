@@ -95,14 +95,14 @@ final class CardDetailVC: UIViewController {
     private func configureStackView() {
         cardView.addSubview(stackView)
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = 24
         stackView.alignment = .center
-        stackView.distribution = .equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.layer.masksToBounds = true
         stackView.layer.cornerRadius = 20
 
         let padding: CGFloat = 24
+
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: tagTextView.bottomAnchor, constant: padding),
             stackView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: padding),
@@ -116,7 +116,7 @@ final class CardDetailVC: UIViewController {
     private func configureTagTextView() {
         cardView.addSubview(tagTextView)
         tagTextView.text = "Phrase"
-        tagTextView.isEditable = false
+        tagTextView.isEditable = true
 
         NSLayoutConstraint.activate([
             tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
@@ -128,7 +128,6 @@ final class CardDetailVC: UIViewController {
 
     private func configureSentenceTextView() {
         stackView.addArrangedSubview(sentenceTextView)
-        sentenceTextView.isEditable = false
         sentenceTextView.font = UIFont.systemFont(ofSize: 20)
         sentenceTextView.layer.cornerRadius = 10
         sentenceTextView.textAlignment = .left
@@ -139,13 +138,12 @@ final class CardDetailVC: UIViewController {
         NSLayoutConstraint.activate([
             sentenceTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             sentenceTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            sentenceTextView.heightAnchor.constraint(equalToConstant: 210)
+            sentenceTextView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 
     private func configureMemoTextView() {
         stackView.addArrangedSubview(memoTextView)
-        memoTextView.isEditable = false
         memoTextView.font = UIFont.systemFont(ofSize: 20)
         memoTextView.layer.cornerRadius = 10
         memoTextView.textAlignment = .left
@@ -153,10 +151,8 @@ final class CardDetailVC: UIViewController {
         memoTextView.backgroundColor = .secondarySystemBackground
 
         NSLayoutConstraint.activate([
-            memoTextView.topAnchor.constraint(equalTo: sentenceTextView.bottomAnchor, constant: 24),
             memoTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            memoTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            memoTextView.heightAnchor.constraint(equalTo: sentenceTextView.heightAnchor)
+            memoTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
     }
 }

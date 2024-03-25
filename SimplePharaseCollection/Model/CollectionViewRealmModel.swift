@@ -12,6 +12,10 @@ struct CollectionViewRealmModel {
 
     private let realm = try! Realm()
 
+    func itemCount() -> Int {
+        return realm.objects(ItemData.self).count
+    }
+
     //Read
     func readItems() -> Results<ItemData> {
         return realm.objects(ItemData.self)

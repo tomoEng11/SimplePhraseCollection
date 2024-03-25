@@ -88,9 +88,8 @@ final class NewCardVC: UIViewController {
     private func configureStackView() {
         cardView.addSubview(stackView)
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = 24
         stackView.alignment = .center
-        stackView.distribution = .equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.layer.masksToBounds = true
         stackView.layer.cornerRadius = 20
@@ -132,7 +131,7 @@ final class NewCardVC: UIViewController {
         NSLayoutConstraint.activate([
             sentenceTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             sentenceTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            sentenceTextView.heightAnchor.constraint(equalToConstant: 190)
+            sentenceTextView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 
@@ -145,10 +144,8 @@ final class NewCardVC: UIViewController {
         memoTextView.backgroundColor = .secondarySystemBackground
 
         NSLayoutConstraint.activate([
-            memoTextView.topAnchor.constraint(equalTo: sentenceTextView.bottomAnchor, constant: 24),
             memoTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            memoTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            memoTextView.heightAnchor.constraint(equalTo: sentenceTextView.heightAnchor)
+            memoTextView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
     }
 }
