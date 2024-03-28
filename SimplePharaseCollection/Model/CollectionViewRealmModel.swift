@@ -27,13 +27,12 @@ struct CollectionViewRealmModel {
     }
 
     //Update
-    func removeCheckmark(for selectedItem: ItemData) throws {
-        if let currentItem = realm.objects(ItemData.self).filter("id == %@", selectedItem.id).first {
+    func reverseCheckmark(for selectedItem: ItemData) throws {
+        guard let currentItem = realm.objects(ItemData.self).filter("id == %@", selectedItem.id).first else { return }
 
-            try realm.write {
-                currentItem.isChecked.toggle()
-                realm.add(currentItem)
-            }
+        try realm.write {
+            currentItem.isChecked.toggle()
+            realm.add(currentItem)
         }
     }
 

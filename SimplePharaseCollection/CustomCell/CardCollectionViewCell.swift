@@ -10,7 +10,7 @@ import UIKit
 final class CardCollectionViewCell: UICollectionViewCell {
 
     private let sentenceLabel = UILabel()
-    private let tagLabel = CustomTagLabel(backgroundColor: .systemOrange, fontSize: 12)
+    private let tagLabel = CollectionTagLabel(backgroundColor: .systemOrange, fontSize: 12)
     static let reuseID = "CardCollectionViewCell"
     let checkmarkImageView = UIImageView()
 

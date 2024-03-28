@@ -10,9 +10,9 @@ import UIKit
 final class ErrorAlertVC: UIViewController {
 
     private let containerView = UIView()
-    private let titleLabel = CustomTitleLabel(textAlignment: .center, fontSize: 20)
-    private let messageLabel = CustomBodyLabel(textAlignment: .center)
-    private let actionButton = CustomButton(backgroundColor: .systemPink, title: "OK")
+    private let titleLabel = AlertTitleLabel(textAlignment: .center, fontSize: 20)
+    private let messageLabel = MessageLabel(textAlignment: .center)
+    private let actionButton = AlertButton(backgroundColor: .systemPink, title: "OK")
 
     var alertTitle: String?
     var message: String?

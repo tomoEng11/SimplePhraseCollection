@@ -10,7 +10,7 @@ import RealmSwift
 
 final class CardDetailVC: UIViewController {
 
-    let tagTextView = CustomLabelTextView(
+    let tagTextView = TagTextView(
         fontSize: 12,
         backgroundColor: .systemOrange)
     let sentenceTextView = PlaceholderTextView(placeholder: "フレーズを入力してください")

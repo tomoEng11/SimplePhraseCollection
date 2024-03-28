@@ -67,7 +67,8 @@ final class CardCollectionVC: UIViewController {
     //MARK: - CollectionView
 
     private func configureCollectionView() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createTwoColumnFlowLayout(in: view))
+        let flowLayout = UICollectionViewFlowLayout().createTwoColumnFlowLayout(in: self.view)
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
         view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(CardCollectionViewCell.self, forCellWithReuseIdentifier: CardCollectionViewCell.reuseID)
@@ -111,25 +112,24 @@ extension CardCollectionVC: UICollectionViewDelegate {
         if collectionView.allowsMultipleSelection {
             //編集中にセルをタップした時のキャンセル処理
 
-            if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-                
-                do {
-                    try realmModel.removeCheckmark(for: selectedItem)
-                } catch {
-                    presentErrorAlert(
-                        title: CRUDError.unknown.description,
-                        message: "",
-                        buttonTitle: "OK")
-                }
-                updateData(with: realmModel.readItems())
+            guard let selectedItem = dataSource.itemIdentifier(for: indexPath) else { return }
+
+            do {
+                try realmModel.reverseCheckmark(for: selectedItem)
+            } catch {
+                presentErrorAlert(
+                    title: CRUDError.unknown.description,
+                    message: "",
+                    buttonTitle: "OK")
             }
+            updateData(with: realmModel.readItems())
+
         } else {
             //編集せずセルをタップした時の画面遷移処理
-            if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-                let destinationVC = CardDetailVC()
-                destinationVC.previousItem = selectedItem
-                navigationController?.pushViewController(destinationVC, animated: true)
-            }
+            guard let selectedItem = dataSource.itemIdentifier(for: indexPath) else { return }
+            let destinationVC = CardDetailVC()
+            destinationVC.previousItem = selectedItem
+            navigationController?.pushViewController(destinationVC, animated: true)
         }
     }
 }

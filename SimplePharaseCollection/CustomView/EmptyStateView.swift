@@ -9,7 +9,7 @@ import UIKit
 
 final class EmptyStateView: UIView {
 
-    private let messageLabel = CustomTitleLabel(textAlignment: .center, fontSize: 28)
+    private let messageLabel = AlertTitleLabel(textAlignment: .center, fontSize: 28)
 
     private let backgroundImageView = UIImageView()
 
@@ -35,7 +35,7 @@ final class EmptyStateView: UIView {
         messageLabel.numberOfLines = 5
         messageLabel.textColor = .systemGray
 
-        backgroundImageView.image = Images.emptyImage 
+        backgroundImageView.image = UIImage.emptyImage 
         backgroundImageView.contentMode = .scaleAspectFit
         backgroundImageView.image?.withTintColor(.white)
 

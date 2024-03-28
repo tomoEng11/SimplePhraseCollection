@@ -1,13 +1,13 @@
 //
-//  CustomTagLabel.swift
+//  CustomButton.swift
 //  SimplePharaseCollection
 //
-//  Created by 井本智博 on 2024/03/20.
+//  Created by 井本智博 on 2024/03/19.
 //
 
 import UIKit
 
-final class CustomTagLabel: UILabel {
+final class AlertButton: UIButton {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -18,19 +18,23 @@ final class CustomTagLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(backgroundColor: UIColor, fontSize: CGFloat) {
+    init(backgroundColor: UIColor, title: String) {
         super.init(frame: .zero)
         self.backgroundColor = backgroundColor
-        self.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
+        self.setTitle(title, for: .normal)
         configure()
     }
 
+
     private func configure() {
-        layer.masksToBounds = true
         layer.cornerRadius = 10
-        textColor = .white
-        textAlignment = .center
-        numberOfLines = 1
+        setTitleColor(.white, for: .normal)
+        titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    func set(backgroundColor: UIColor, title: String) {
+        self.backgroundColor = backgroundColor
+        setTitle(title, for: .normal)
     }
 }

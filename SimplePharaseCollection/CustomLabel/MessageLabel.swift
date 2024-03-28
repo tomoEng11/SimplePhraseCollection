@@ -1,5 +1,5 @@
 //
-//  CustomTitleLabel.swift
+//  CustomBodyLabel.swift
 //  SimplePharaseCollection
 //
 //  Created by 井本智博 on 2024/03/19.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CustomTitleLabel: UILabel {
+final class MessageLabel: UILabel {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -18,19 +18,17 @@ final class CustomTitleLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(textAlignment: NSTextAlignment, fontSize: CGFloat) {
+    init(textAlignment: NSTextAlignment) {
         super.init(frame: .zero)
         self.textAlignment = textAlignment
-        self.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
         configure()
     }
 
     private func configure() {
-        textColor = .label
+        font = UIFont.preferredFont(forTextStyle: .body)
         adjustsFontSizeToFitWidth = true
-        minimumScaleFactor = 0.9
-        lineBreakMode = .byTruncatingTail
+        minimumScaleFactor = 0.75
+        lineBreakMode = .byWordWrapping
         translatesAutoresizingMaskIntoConstraints = false
     }
 }
-
