@@ -3,7 +3,7 @@
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
 ## Stores meta information about folders and files
-.DS_Store
+*.DS_Store
 
 ## User settings
 xcuserdata/
