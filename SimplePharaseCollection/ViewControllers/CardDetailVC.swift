@@ -13,7 +13,7 @@ final class CardDetailVC: UIViewController {
     let tagTextView = CustomLabelTextView(
         fontSize: 12,
         backgroundColor: .systemOrange)
-    let sentenceTextView = UITextView()
+    let sentenceTextView = PlaceholderTextView(placeholder: "フレーズを入力してください")
     let memoTextView = UITextView()
     private let stackView = UIStackView()
     private let scrollView = UIScrollView()
@@ -122,7 +122,7 @@ final class CardDetailVC: UIViewController {
             tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
             tagTextView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
             tagTextView.heightAnchor.constraint(equalToConstant: 32),
-            tagTextView.widthAnchor.constraint(equalToConstant: 110)
+            tagTextView.widthAnchor.constraint(equalToConstant: 130)
         ])
     }
 
@@ -200,6 +200,14 @@ extension CardDetailVC {
     }
 
     @objc private func navEditButtonPressed() {
+        guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
+            presentErrorAlert(
+                title: "フレーズセクションが空です。",
+                message: "フレーズを入力してください。",
+                buttonTitle: "OK")
+            return
+        }
+        
         switchEdittingMode()
         if sentenceTextView.isEditable {
             //編集中に表示するキャンセルボタンの生成
@@ -271,6 +279,14 @@ extension CardDetailVC {
     }
 
     @objc private func saveButtonTapped() {
+        guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
+            presentErrorAlert(
+                title: "フレーズセクションが空です。",
+                message: "フレーズを入力してください。",
+                buttonTitle: "OK")
+            return
+        }
+
         memoTextView.isEditable.toggle()
         sentenceTextView.isEditable.toggle()
         tagTextView.isEditable.toggle()

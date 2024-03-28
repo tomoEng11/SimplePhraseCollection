@@ -13,8 +13,8 @@ final class NewCardVC: UIViewController {
     private let tagTextView = CustomLabelTextView(
         fontSize: 12,
         backgroundColor: .systemOrange)
-    private let sentenceTextView = UITextView()
-    private let memoTextView = UITextView()
+    private let sentenceTextView = PlaceholderTextView(placeholder: "フレーズを入力してください")
+    private let memoTextView = PlaceholderTextView(placeholder: "メモ(任意)")
     private let stackView = UIStackView()
     private let scrollView = UIScrollView()
     private let scrollContentView = UIView()
@@ -111,11 +111,12 @@ final class NewCardVC: UIViewController {
         tagTextView.text = "Phrase"
         tagTextView.isEditable = true
 
+
         NSLayoutConstraint.activate([
             tagTextView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 32),
             tagTextView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 24),
             tagTextView.heightAnchor.constraint(equalToConstant: 32),
-            tagTextView.widthAnchor.constraint(equalToConstant: 110)
+            tagTextView.widthAnchor.constraint(equalToConstant: 130)
         ])
     }
 
@@ -186,7 +187,7 @@ extension NewCardVC {
         guard sentenceTextView.text != nil && sentenceTextView.text != "" else {
             presentErrorAlert(
                 title: "フレーズセクションが空です。",
-                message: "フレーズセクションにフレーズを入力してください。",
+                message: "フレーズを入力してください。",
                 buttonTitle: "OK")
             return
         }
