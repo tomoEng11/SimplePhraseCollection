@@ -12,7 +12,7 @@ final class CardCollectionViewCell: UICollectionViewCell {
     private let sentenceLabel = UILabel()
     private let tagLabel = CollectionTagLabel(backgroundColor: .systemOrange, fontSize: 12)
     static let reuseID = "CardCollectionViewCell"
-    let checkmarkImageView = UIImageView()
+    private let checkmarkImageView = UIImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,9 +38,7 @@ final class CardCollectionViewCell: UICollectionViewCell {
 
     private func configureTagLabel() {
         contentView.addSubview(tagLabel)
-
         tagLabel.text = "Follwers32-32"
-
         NSLayoutConstraint.activate([
             tagLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             tagLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
@@ -58,10 +56,8 @@ final class CardCollectionViewCell: UICollectionViewCell {
         sentenceLabel.textAlignment = .left
         sentenceLabel.font = .systemFont(ofSize: 12, weight: .regular)
         sentenceLabel.backgroundColor = .secondarySystemBackground
-        sentenceLabel.translatesAutoresizingMaskIntoConstraints = false
         sentenceLabel.lineBreakMode = .byTruncatingTail
-
-        NSLayoutConstraint.activate([
+        sentenceLabel.set(constraints: [
             sentenceLabel.topAnchor.constraint(equalTo: tagLabel.bottomAnchor, constant: 8),
             sentenceLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
             sentenceLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
@@ -70,12 +66,10 @@ final class CardCollectionViewCell: UICollectionViewCell {
     }
 
     private func configureCheckmarkImageView() {
-        checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
         checkmarkImageView.image = UIImage(systemName: "checkmark")
         checkmarkImageView.isHidden = true
-
         contentView.addSubview(checkmarkImageView)
-        NSLayoutConstraint.activate([
+        checkmarkImageView.set(constraints: [
             checkmarkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             checkmarkImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
         ])

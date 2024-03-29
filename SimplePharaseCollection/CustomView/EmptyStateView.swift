@@ -11,8 +11,6 @@ final class EmptyStateView: UIView {
 
     private let messageLabel = AlertTitleLabel(textAlignment: .center, fontSize: 28)
 
-    private let backgroundImageView = UIImageView()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -30,25 +28,14 @@ final class EmptyStateView: UIView {
 
     private func configure() {
         addSubview(messageLabel)
-        addSubview(backgroundImageView)
-
         messageLabel.numberOfLines = 5
         messageLabel.textColor = .systemGray
-
-        backgroundImageView.image = UIImage.emptyImage 
-        backgroundImageView.contentMode = .scaleAspectFit
-        backgroundImageView.image?.withTintColor(.white)
 
         NSLayoutConstraint.activate([
             messageLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40),
             messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
             messageLabel.heightAnchor.constraint(equalToConstant: 250),
-
-            backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
-            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 }

@@ -8,26 +8,28 @@
 import UIKit
 
 class MainTabBarController: UITabBarController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        viewControllers = [setUpCardCollectionVC(), setUpCardEdittingVC()]
-        tabBar.barTintColor = .systemBackground
-    }
 
-    private func setUpCardEdittingVC() -> UINavigationController {
-        let cardEdittingVC = NewCardVC()
-        cardEdittingVC.tabBarItem = UITabBarItem(title: "New Card", image: UIImage(systemName: "rectangle.portrait.badge.plus"), selectedImage: nil)
-        let navVC = UINavigationController(rootViewController: cardEdittingVC)
+    lazy var newCardVC: UINavigationController = {
+        let newCardVC = NewCardVC()
+        newCardVC.tabBarItem = UITabBarItem(title: "New Card", image: UIImage(systemName: "rectangle.portrait.badge.plus"), selectedImage: nil)
+        let navVC = UINavigationController(rootViewController: newCardVC)
         navVC.navigationBar.prefersLargeTitles = true
         return navVC
-    }
-
-    private func setUpCardCollectionVC() -> UINavigationController {
+    }()
+    lazy var cardCollectionVC: UINavigationController = {
         let cardCollectionVC = CardCollectionVC()
-        cardCollectionVC.tabBarItem = UITabBarItem(title: "Collection", image: UIImage(systemName: "rectangle.on.rectangle.angled")
-, selectedImage: nil)
+        cardCollectionVC.tabBarItem = UITabBarItem(
+            title: "Collection",
+            image: UIImage(systemName: "rectangle.on.rectangle.angled"),
+            selectedImage: nil)
         let navVC = UINavigationController(rootViewController: cardCollectionVC)
         navVC.navigationBar.prefersLargeTitles = true
         return navVC
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        viewControllers = [cardCollectionVC, newCardVC]
+        tabBar.barTintColor = .systemBackground
     }
 }

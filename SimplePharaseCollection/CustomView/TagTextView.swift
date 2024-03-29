@@ -25,7 +25,6 @@ final class TagTextView: UITextView {
         layer.cornerRadius = 10
         textColor = .white
         textAlignment = .center
-        translatesAutoresizingMaskIntoConstraints = false
         isScrollEnabled = false
         adjustsFontForContentSizeCategory = true
         textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)

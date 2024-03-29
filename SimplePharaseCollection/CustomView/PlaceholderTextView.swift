@@ -34,14 +34,12 @@ class PlaceholderTextView: UITextView {
         super.layoutSubviews()
 
         addSubview(placeholderLabel)
-        placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
         placeholderLabel.textColor = .secondaryLabel
         placeholderLabel.font = font
         placeholderLabel.numberOfLines = 0
         placeholderLabel.text = placeholder
-
         let horizontalPadding = textContainer.lineFragmentPadding
-        NSLayoutConstraint.activate([
+        placeholderLabel.set(constraints: [
             placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: textContainerInset.left + horizontalPadding),
             placeholderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(textContainerInset.right + horizontalPadding)),
             placeholderLabel.topAnchor.constraint(equalTo: topAnchor, constant: textContainerInset.top),

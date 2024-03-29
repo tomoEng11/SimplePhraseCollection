@@ -14,9 +14,9 @@ final class AlertVC: UIViewController {
     private let messageLabel = MessageLabel(textAlignment: .center)
     private let actionButton = AlertButton(backgroundColor: .systemGreen, title: "OK")
 
-    var alertTitle: String?
-    var message: String?
-    var buttonTitle: String?
+    private var alertTitle: String?
+    private var message: String?
+    private var buttonTitle: String?
 
     private let padding: CGFloat = 20
 
@@ -46,9 +46,7 @@ final class AlertVC: UIViewController {
         containerView.layer.cornerRadius = 16
         containerView.layer.borderWidth = 2
         containerView.layer.borderColor = UIColor.lightGray.cgColor
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
+        containerView.set(constraints: [
             containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             containerView.heightAnchor.constraint(equalToConstant: 220),
@@ -59,8 +57,7 @@ final class AlertVC: UIViewController {
     private func configureTitleLabel() {
         containerView.addSubview(titleLabel)
         titleLabel.text = alertTitle ?? "Something went wrong"
-
-        NSLayoutConstraint.activate([
+        titleLabel.set(constraints: [
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
@@ -72,8 +69,7 @@ final class AlertVC: UIViewController {
         containerView.addSubview(actionButton)
         actionButton.setTitle(buttonTitle ?? "OK", for: .normal)
         actionButton.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
-
-        NSLayoutConstraint.activate([
+        actionButton.set(constraints: [
             actionButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -padding),
             actionButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
             actionButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
@@ -89,8 +85,7 @@ final class AlertVC: UIViewController {
         view.addSubview(messageLabel)
         messageLabel.text = message ?? "Unable to complete request"
         messageLabel.numberOfLines = 4
-
-        NSLayoutConstraint.activate([
+        messageLabel.set(constraints: [
             messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
             messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),

@@ -134,10 +134,10 @@ extension CardCollectionVC: UICollectionViewDelegate {
     }
 }
 
-extension CardCollectionVC {
+private extension CardCollectionVC {
     //MARK: - ViewController Setting
 
-    private func configureViewController() {
+    func configureViewController() {
         view.backgroundColor = .systemBackground
         self.title = "Phrase Collection"
         let selectButton = UIBarButtonItem(
@@ -147,24 +147,22 @@ extension CardCollectionVC {
         navigationItem.rightBarButtonItem = selectButton
     }
 
-    private func checkItemEmptyAndShowEmptyView(numberOfItems: Int) {
+    func checkItemEmptyAndShowEmptyView(numberOfItems: Int) {
         if numberOfItems == 0 {
             let message = "Welcome to Phrase Collection. \nAdd your favorite phrase\nin New Card Screen. "
             DispatchQueue.main.async {
-                self.showEmptyStateView(with: message, in: self.view)
-                print("n=0")
+                self.showEmptyStateView(with: message)
             }
         } else {
             DispatchQueue.main.async {
                 self.hideEmptyStateView()
-                print("\(numberOfItems)")
             }
         }
     }
 
     //MARK: - NavButton Actions
 
-    @objc private func navBarButtonPressed() {
+    @objc func navBarButtonPressed() {
         collectionView.allowsMultipleSelection.toggle()
 
         if collectionView.allowsMultipleSelection {
@@ -188,7 +186,7 @@ extension CardCollectionVC {
         }
     }
 
-    private func generateCancelButtonOnEdittingMode() {
+    func generateCancelButtonOnEdittingMode() {
         let cancelButton = UIBarButtonItem(
             title: "Cancel",
             style: .plain,
@@ -197,7 +195,7 @@ extension CardCollectionVC {
         navigationItem.rightBarButtonItem = cancelButton
     }
 
-    private func generateEditButtonOnViewingMode() {
+    func generateEditButtonOnViewingMode() {
         let editButton = UIBarButtonItem(
             title: "Edit",
             style: .plain,
@@ -206,7 +204,7 @@ extension CardCollectionVC {
         navigationItem.rightBarButtonItem = editButton
     }
 
-    @objc private func deleteButtonTapped() {
+    @objc func deleteButtonTapped() {
         do {
             try realmModel.deleteItems()
             presentAlert(
@@ -227,14 +225,12 @@ extension CardCollectionVC {
 
     //MARK: - ToolBar
 
-    private func configureToolBar() {
+    func configureToolBar() {
         view.addSubview(toolBar)
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
         toolBar.sizeToFit()
         toolBar.backgroundColor = .systemBackground
         toolBar.isHidden = true
-
-        NSLayoutConstraint.activate([
+        toolBar.set(constraints: [
             toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             toolBar.widthAnchor.constraint(equalTo: view.widthAnchor),
             toolBar.heightAnchor.constraint(equalToConstant: 55)
@@ -262,10 +258,11 @@ extension CardCollectionVC {
         let lineView = UIView()
         lineView.backgroundColor = .secondarySystemBackground
         toolBar.addSubview(lineView)
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        lineView.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor).isActive = true
-        lineView.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor).isActive = true
-        lineView.bottomAnchor.constraint(equalTo: toolBar.bottomAnchor).isActive = true
+        lineView.set(constraints: [
+            lineView.heightAnchor.constraint(equalToConstant: 1),
+            lineView.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor),
+            lineView.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor),
+            lineView.bottomAnchor.constraint(equalTo: toolBar.bottomAnchor)
+        ])
     }
 }
