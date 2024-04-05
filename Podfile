@@ -6,6 +6,6 @@ target 'SimplePharaseCollection' do
 
   # Pods for SimplePharaseCollection
 
-pod 'RealmSwift'
+pod 'RealmSwift', '~> 10.49.1'
 
 end
