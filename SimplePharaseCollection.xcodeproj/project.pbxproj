@@ -18,7 +18,7 @@
 		BB3035512BB02BC70094D018 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035502BB02BC70094D018 /* AlertVC.swift */; };
 		BB3035572BB53E0D0094D018 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035562BB53E0D0094D018 /* PlaceholderTextView.swift */; };
 		BB3035592BB5A7090094D018 /* UICollectionViewFlowLayout+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3035582BB5A7090094D018 /* UICollectionViewFlowLayout+Extension.swift */; };
-		BB30355B2BB5A9A00094D018 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB30355A2BB5A9A00094D018 /* UIImage+Extension.swift */; };
+		BB30355D2BB6AE870094D018 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB30355C2BB6AE870094D018 /* UIView.swift */; };
 		BB90FABD2BA9CE84009B85ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FABC2BA9CE84009B85ED /* AppDelegate.swift */; };
 		BB90FABF2BA9CE84009B85ED /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB90FABE2BA9CE84009B85ED /* SceneDelegate.swift */; };
 		BB90FAC62BA9CE85009B85ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB90FAC52BA9CE85009B85ED /* Assets.xcassets */; };
@@ -49,7 +49,7 @@
 		BB3035502BB02BC70094D018 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
 		BB3035562BB53E0D0094D018 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		BB3035582BB5A7090094D018 /* UICollectionViewFlowLayout+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewFlowLayout+Extension.swift"; sourceTree = "<group>"; };
-		BB30355A2BB5A9A00094D018 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		BB30355C2BB6AE870094D018 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		BB90FAB92BA9CE84009B85ED /* SimplePharaseCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimplePharaseCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB90FABC2BA9CE84009B85ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB90FABE2BA9CE84009B85ED /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 			children = (
 				BB90FAE62BA9D3BC009B85ED /* UIViewController+Extension.swift */,
 				BB3035582BB5A7090094D018 /* UICollectionViewFlowLayout+Extension.swift */,
-				BB30355A2BB5A9A00094D018 /* UIImage+Extension.swift */,
+				BB30355C2BB6AE870094D018 /* UIView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -357,6 +357,7 @@
 				BB90FABF2BA9CE84009B85ED /* SceneDelegate.swift in Sources */,
 				BB3035592BB5A7090094D018 /* UICollectionViewFlowLayout+Extension.swift in Sources */,
 				BB90FAED2BA9D478009B85ED /* AlertButton.swift in Sources */,
+				BB30355D2BB6AE870094D018 /* UIView.swift in Sources */,
 				BB3035422BAFD3C70094D018 /* EmptyStateView.swift in Sources */,
 				BB3035512BB02BC70094D018 /* AlertVC.swift in Sources */,
 				BB90FAD42BA9D17B009B85ED /* NewCardVC.swift in Sources */,
@@ -366,7 +367,6 @@
 				BB90FAD92BA9D203009B85ED /* CardCollectionVC.swift in Sources */,
 				BB3035572BB53E0D0094D018 /* PlaceholderTextView.swift in Sources */,
 				BB90FAEA2BA9D41B009B85ED /* CardCollectionViewCell.swift in Sources */,
-				BB30355B2BB5A9A00094D018 /* UIImage+Extension.swift in Sources */,
 				BB3035482BB003520094D018 /* NewCardVCRealmModel.swift in Sources */,
 				BB90FAE52BA9D359009B85ED /* MessageLabel.swift in Sources */,
 				BB90FADD2BA9D287009B85ED /* ItemData.swift in Sources */,
@@ -511,6 +511,8 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimplePharaseCollection/Support/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PhraseCollection;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -543,6 +545,8 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimplePharaseCollection/Support/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PhraseCollection;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

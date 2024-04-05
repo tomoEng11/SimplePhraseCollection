@@ -152,10 +152,12 @@ private extension CardCollectionVC {
             let message = "Welcome to Phrase Collection. \nAdd your favorite phrase\nin New Card Screen. "
             DispatchQueue.main.async {
                 self.showEmptyStateView(with: message)
+                self.navigationItem.rightBarButtonItem?.isEnabled = false
             }
         } else {
             DispatchQueue.main.async {
                 self.hideEmptyStateView()
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
         }
     }
