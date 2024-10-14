@@ -147,7 +147,7 @@
 				BB90FAD52BA9D1A3009B85ED /* ViewControllers */,
 				BB3035432BAFDAB40094D018 /* CustomView */,
 				BB90FAEE2BA9D49A009B85ED /* CustomButton */,
-				BB90FAEB2BA9D44F009B85ED /* CustomCell */,
+				BB90FAEB2BA9D44F009B85ED /* Cell */,
 				BB90FAE12BA9D304009B85ED /* CustomLabel */,
 				BB90FAE82BA9D3CC009B85ED /* Extensions */,
 			);
@@ -202,12 +202,12 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		BB90FAEB2BA9D44F009B85ED /* CustomCell */ = {
+		BB90FAEB2BA9D44F009B85ED /* Cell */ = {
 			isa = PBXGroup;
 			children = (
 				BB90FAE92BA9D41B009B85ED /* CardCollectionViewCell.swift */,
 			);
-			path = CustomCell;
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		BB90FAEE2BA9D49A009B85ED /* CustomButton */ = {

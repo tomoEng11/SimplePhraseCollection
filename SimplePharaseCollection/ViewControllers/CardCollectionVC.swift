@@ -47,9 +47,7 @@ final class CardCollectionVC: UIViewController {
                     withReuseIdentifier: CardCollectionViewCell.reuseID,
                     for: indexPath) as! CardCollectionViewCell
 
-                DispatchQueue.main.async {
-                    cell.set(with: item)
-                }
+                cell.set(with: item)
                 return cell
             }
         )
